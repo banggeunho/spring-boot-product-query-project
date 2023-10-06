@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "product")
+@Entity(name = "products")
 public class ProductEntity extends BaseEntity {
 
     @Id
