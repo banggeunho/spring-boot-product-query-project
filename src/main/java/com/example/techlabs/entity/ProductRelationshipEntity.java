@@ -21,8 +21,9 @@ public class ProductRelationshipEntity extends BaseUpdateEntity {
     private Long id;
 
     @Comment("타겟 상품 ID")
-    @Column(name = "target_item_id", nullable = false)
-    private Long targetItemId;
+    @ManyToOne
+    @JoinColumn(name = "target_item_id", nullable = false)
+    private ProductEntity product;
 
     @Comment("연관된 상품 ID")
     @Column(name = "result_item_id", nullable = false)

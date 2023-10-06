@@ -1,17 +1,18 @@
 package com.example.techlabs.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Getter
 @Setter
+@ToString(callSuper = true)
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "products")
@@ -45,4 +46,7 @@ public class ProductEntity extends BaseUpdateEntity {
     @Comment("상품 판매가격")
     @Column(name = "sale_price", nullable = false)
     private BigDecimal salePrice;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductRelationshipEntity> relatedProducts;
 }
