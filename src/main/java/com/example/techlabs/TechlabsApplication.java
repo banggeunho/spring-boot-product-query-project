@@ -24,31 +24,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TechlabsApplication {
 
+    private static final String CSV_ROOT_DIR = "data/";
+    private static final String PRODUCT_CSV_NAME = "product.csv";
+    private static final String REC_CSV_NAME = "rec.csv";
     private final CsvDataMigrationService csvDataMigrationService;
+
     public static void main(String[] args) {
         SpringApplication.run(TechlabsApplication.class, args);
     }
 
     @PostConstruct
     public void loadDataFromCsv() throws IOException {
-        //todo 로깅 설정하기..
-        log.debug("start loading data.. ..");
-        System.out.println("start loading date");
         List<ProductCsvBean> productCsvBeans = csvDataMigrationService.loadDataFromCsv(
-                getResourcePath("product.csv"),
+                getResourcePath(PRODUCT_CSV_NAME),
                 ProductCsvBean.class);
 
         List<ProductRelationshipCsvBean> productRelationshipCsvBeans = csvDataMigrationService.loadDataFromCsv(
-                getResourcePath("rec.csv"),
+                getResourcePath(REC_CSV_NAME),
                 ProductRelationshipCsvBean.class);
 
         log.debug(productCsvBeans.toString());
         log.debug(productRelationshipCsvBeans.toString());
-
     }
 
     private Path getResourcePath(String resourceName) throws IOException {
-        Resource resource = new ClassPathResource("data/" + resourceName);
+        Resource resource = new ClassPathResource(CSV_ROOT_DIR + resourceName);
         if (resource.exists()) {
             try (InputStream inputStream = resource.getInputStream()) {
                 return Paths.get(resource.getURI());
