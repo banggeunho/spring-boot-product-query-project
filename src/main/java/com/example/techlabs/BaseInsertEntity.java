@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseInsertEntity {
 
     @CreatedDate
     @Column(nullable = false)
@@ -30,13 +30,4 @@ public abstract class BaseEntity {
     @CreatedBy
     @Column(nullable = false)
     private String createdBy;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private LocalDateTime lastModifiedAt;
-
-    @LastModifiedBy
-    @Column(nullable = false)
-    private String lastModifiedBy;
-
 }

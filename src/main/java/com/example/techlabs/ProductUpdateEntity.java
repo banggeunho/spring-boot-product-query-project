@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "products")
-public class ProductEntity extends BaseEntity {
+public class ProductUpdateEntity extends BaseUpdateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
