@@ -1,4 +1,4 @@
-package com.example.techlabs;
+package com.example.techlabs.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "products")
-public class ProductUpdateEntity extends BaseUpdateEntity {
+@Entity(name = "product_histories")
+public class ProductHistoryUpdateEntity extends BaseInsertEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

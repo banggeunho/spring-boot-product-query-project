@@ -1,4 +1,4 @@
-package com.example.techlabs;
+package com.example.techlabs.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseInsertEntity {
+public abstract class BaseUpdateEntity {
 
     @CreatedDate
     @Column(nullable = false)
@@ -30,4 +30,13 @@ public abstract class BaseInsertEntity {
     @CreatedBy
     @Column(nullable = false)
     private String createdBy;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime lastModifiedAt;
+
+    @LastModifiedBy
+    @Column(nullable = false)
+    private String lastModifiedBy;
+
 }

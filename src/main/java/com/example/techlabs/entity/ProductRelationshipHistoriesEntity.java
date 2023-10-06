@@ -1,4 +1,4 @@
-package com.example.techlabs;
+package com.example.techlabs.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

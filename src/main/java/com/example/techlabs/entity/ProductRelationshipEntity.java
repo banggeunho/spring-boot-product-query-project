@@ -1,5 +1,6 @@
-package com.example.techlabs;
+package com.example.techlabs.entity;
 import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,10 @@ import org.hibernate.annotations.Comment;
 import java.math.BigDecimal;
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRelationshipsEntity extends BaseUpdateEntity {
+@Entity(name = "product_relationships")
+public class ProductRelationshipEntity extends BaseUpdateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +35,4 @@ public class ProductRelationshipsEntity extends BaseUpdateEntity {
     @Comment("연관 상품 순위")
     @Column(name = "original_price", nullable = false)
     private BigDecimal originalPrice;
-
 }
