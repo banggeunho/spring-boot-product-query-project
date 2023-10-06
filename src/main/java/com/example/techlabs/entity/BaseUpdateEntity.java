@@ -24,19 +24,19 @@ import java.time.LocalDateTime;
 public abstract class BaseUpdateEntity {
 
     @CreatedDate
-    @Column(nullable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @CreatedBy
-    @Column(nullable = false)
+    @Column(updatable = false)
     private String createdBy;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column
     private LocalDateTime lastModifiedAt;
 
     @LastModifiedBy
-    @Column(nullable = false)
+    @Column
     private String lastModifiedBy;
 
 }

@@ -1,15 +1,15 @@
 package com.example.techlabs;
 
-import com.example.techlabs.csv.CsvDataMigrationService;
 import com.example.techlabs.csv.ProductCsvBean;
 import com.example.techlabs.csv.ProductRelationshipCsvBean;
+import com.example.techlabs.service.LoadDataFromCSVService;
+import com.example.techlabs.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
-@EnableJpaAuditing
 @SpringBootApplication
 @RequiredArgsConstructor
 public class TechlabsApplication {
@@ -27,7 +26,8 @@ public class TechlabsApplication {
     private static final String CSV_ROOT_DIR = "data/";
     private static final String PRODUCT_CSV_NAME = "product.csv";
     private static final String REC_CSV_NAME = "rec.csv";
-    private final CsvDataMigrationService csvDataMigrationService;
+    private final LoadDataFromCSVService loadDataFromCSVService;
+    private final ProductService productService;
 
     public static void main(String[] args) {
         SpringApplication.run(TechlabsApplication.class, args);
@@ -35,16 +35,19 @@ public class TechlabsApplication {
 
     @PostConstruct
     public void loadDataFromCsv() throws IOException {
-        List<ProductCsvBean> productCsvBeans = csvDataMigrationService.loadDataFromCsv(
+        List<ProductCsvBean> productCsvBeans = loadDataFromCSVService.loadData(
                 getResourcePath(PRODUCT_CSV_NAME),
                 ProductCsvBean.class);
 
-        List<ProductRelationshipCsvBean> productRelationshipCsvBeans = csvDataMigrationService.loadDataFromCsv(
+        List<ProductRelationshipCsvBean> productRelationshipCsvBeans = loadDataFromCSVService.loadData(
                 getResourcePath(REC_CSV_NAME),
                 ProductRelationshipCsvBean.class);
 
         log.debug(productCsvBeans.toString());
         log.debug(productRelationshipCsvBeans.toString());
+
+        productService.saveAll(productCsvBeans);
+
     }
 
     private Path getResourcePath(String resourceName) throws IOException {
