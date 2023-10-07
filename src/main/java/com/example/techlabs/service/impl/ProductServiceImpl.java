@@ -1,5 +1,6 @@
 package com.example.techlabs.service.impl;
 
+import com.example.techlabs.common.CommonUtil;
 import com.example.techlabs.csv.ProductCsvBean;
 import com.example.techlabs.entity.ProductEntity;
 import com.example.techlabs.entity.ProductRelationshipEntity;
@@ -11,12 +12,15 @@ import com.example.techlabs.service.vo.ProductQueryVOList;
 import com.example.techlabs.service.vo.RelatedProductInfoVO;
 import com.example.techlabs.service.vo.RelatedProductInfoVOList;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -82,29 +86,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductRelationshipEntity> productRelationshipEntities) {
+        log.debug("mapping related Product");
         return RelatedProductInfoVOList.builder()
-                .voList(productRelationshipEntities.stream()
-                        .map(productRelationshipEntity -> {
-                            ProductEntity resultProduct = productJpaRepository.findByItemId(
-                                    productRelationshipEntity.getResultItemId()).orElse(null);
-
-                            if (resultProduct == null) {
-                                return null;
-                            }
-
-                            return RelatedProductInfoVO.builder()
-                                    .itemId(resultProduct.getItemId())
-                                    .itemName(resultProduct.getItemName())
-                                    .itemImageUrl(resultProduct.getItemImageUrl())
-                                    .itemDescriptionUrl(resultProduct.getItemDescriptionUrl())
-                                    .originalPrice(resultProduct.getOriginalPrice())
-                                    .salePrice(resultProduct.getSalePrice())
-                                    .score(productRelationshipEntity.getScore())
-                                    .rank(productRelationshipEntity.getRank())
-                                    .build();
-                        })
-                        .collect(Collectors.toList())
-                )
+                .voList(productJpaRepository.findByItemIdInAndIsDeleted(productRelationshipEntities.stream()
+                                        .map(ProductRelationshipEntity::getResultItemId)
+                                        .collect(Collectors.toList()),
+                                false).stream()
+                        .map(resultProduct -> RelatedProductInfoVO.builder()
+                                .itemId(resultProduct.getItemId())
+                                .itemName(resultProduct.getItemName())
+                                .itemImageUrl(resultProduct.getItemImageUrl())
+                                .itemDescriptionUrl(resultProduct.getItemDescriptionUrl())
+                                .originalPrice(resultProduct.getOriginalPrice())
+                                .salePrice(resultProduct.getSalePrice())
+                                .score(CommonUtil.findByKey(productRelationshipEntities, x -> x.getResultItemId().equals(resultProduct.getItemId())).getScore())
+                                .rank(CommonUtil.findByKey(productRelationshipEntities, x -> x.getResultItemId().equals(resultProduct.getItemId())).getRank())
+                                .build())
+                        .collect(Collectors.toList()))
                 .build();
     }
 }
