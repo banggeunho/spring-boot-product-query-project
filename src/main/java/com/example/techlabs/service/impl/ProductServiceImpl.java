@@ -1,13 +1,17 @@
 package com.example.techlabs.service.impl;
 
-import com.example.techlabs.common.CommonUtil;
-import com.example.techlabs.csv.ProductCsvBean;
-import com.example.techlabs.entity.ProductEntity;
-import com.example.techlabs.entity.ProductRelationshipEntity;
+import com.example.techlabs.base.common.CommonUtil;
+import com.example.techlabs.base.csv.ProductCsvBean;
+import com.example.techlabs.repository.entity.ProductEntity;
+import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import com.example.techlabs.repository.ProductJdbcRepository;
 import com.example.techlabs.repository.ProductJpaRepository;
 import com.example.techlabs.service.ProductService;
-import com.example.techlabs.service.vo.*;
+import com.example.techlabs.service.vo.command.ProductCommandVO;
+import com.example.techlabs.service.vo.query.ProductQueryVO;
+import com.example.techlabs.service.vo.query.ProductQueryVOList;
+import com.example.techlabs.service.vo.query.RelatedProductInfoVO;
+import com.example.techlabs.service.vo.query.RelatedProductInfoVOList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
         return ProductQueryVOList.builder()
                 .productQueryVOList(
                         productJpaRepository.findAll().stream()
+                                .filter(x -> !x.getIsDel())
                                 .map(x -> ProductQueryVO.builder()
                                         .id(x.getId())
                                         .itemId(x.getItemId())

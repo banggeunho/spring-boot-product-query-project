@@ -1,10 +1,10 @@
 package com.example.techlabs.service.impl;
 
-import com.example.techlabs.csv.ProductRelationshipCsvBean;
-import com.example.techlabs.entity.ProductRelationshipEntity;
+import com.example.techlabs.base.csv.ProductRelationshipCsvBean;
+import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import com.example.techlabs.repository.ProductRelationshipJdbcRepository;
 import com.example.techlabs.service.ProductRelationService;
-import com.example.techlabs.service.vo.ProductQueryVOList;
+import com.example.techlabs.service.vo.query.ProductQueryVOList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

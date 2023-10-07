@@ -1,6 +1,6 @@
 package com.example.techlabs.service.impl;
 
-import com.example.techlabs.csv.CsvBean;
+import com.example.techlabs.base.csv.CsvBean;
 import com.example.techlabs.service.LoadDataFromCSVService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;

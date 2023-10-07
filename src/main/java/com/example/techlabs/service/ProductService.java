@@ -1,9 +1,9 @@
 package com.example.techlabs.service;
 
-import com.example.techlabs.csv.ProductCsvBean;
-import com.example.techlabs.service.vo.ProductCommandVO;
-import com.example.techlabs.service.vo.ProductQueryVO;
-import com.example.techlabs.service.vo.ProductQueryVOList;
+import com.example.techlabs.base.csv.ProductCsvBean;
+import com.example.techlabs.service.vo.command.ProductCommandVO;
+import com.example.techlabs.service.vo.query.ProductQueryVO;
+import com.example.techlabs.service.vo.query.ProductQueryVOList;
 
 import java.util.List;
 

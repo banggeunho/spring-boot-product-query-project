@@ -1,7 +1,7 @@
 package com.example.techlabs;
 
-import com.example.techlabs.csv.ProductCsvBean;
-import com.example.techlabs.csv.ProductRelationshipCsvBean;
+import com.example.techlabs.base.csv.ProductCsvBean;
+import com.example.techlabs.base.csv.ProductRelationshipCsvBean;
 import com.example.techlabs.service.LoadDataFromCSVService;
 import com.example.techlabs.service.ProductRelationService;
 import com.example.techlabs.service.ProductService;

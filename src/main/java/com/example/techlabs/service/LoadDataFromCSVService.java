@@ -1,6 +1,6 @@
 package com.example.techlabs.service;
 
-import com.example.techlabs.csv.CsvBean;
+import com.example.techlabs.base.csv.CsvBean;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;

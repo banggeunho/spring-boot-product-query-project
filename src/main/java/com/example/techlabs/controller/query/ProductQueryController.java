@@ -1,6 +1,6 @@
 package com.example.techlabs.controller.query;
 
-import com.example.techlabs.controller.dto.ProductQueryResponseDTOList;
+import com.example.techlabs.controller.query.dto.ProductQueryResponseDTOList;
 import com.example.techlabs.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
