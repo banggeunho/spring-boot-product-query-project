@@ -1,7 +1,6 @@
 package com.example.techlabs.service;
 
 import com.example.techlabs.csv.ProductRelationshipCsvBean;
-import com.example.techlabs.service.vo.ProductCommandVOList;
 import com.example.techlabs.service.vo.ProductQueryVOList;
 
 import java.util.List;
