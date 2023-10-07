@@ -5,7 +5,9 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,7 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "products")
-public class ProductEntity extends BaseUpdateEntity {
+@Table(name = "products", indexes = @Index(name = "idx__item_id", columnList = "item_id"))
+public class ProductEntity extends BaseUpdateEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +51,10 @@ public class ProductEntity extends BaseUpdateEntity {
     @Column(name = "sale_price", nullable = false)
     private BigDecimal salePrice;
 
+    @Comment("상품 삭제여부")
+    @Column(name = "is_del", nullable = false)
+    private Boolean isDel;
+
     @OneToMany(mappedBy = "product")
-    private List<ProductRelationshipEntity> relatedProducts;
+    private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
 }

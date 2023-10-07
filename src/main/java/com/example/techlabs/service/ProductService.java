@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProductService {
     int saveAll(List<ProductCsvBean> productCsvBeans);
+
+    ProductVOList findAll();
 }

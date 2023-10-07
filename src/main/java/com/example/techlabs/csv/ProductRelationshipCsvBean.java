@@ -21,5 +21,5 @@ public class ProductRelationshipCsvBean extends CsvBean {
     private BigDecimal score;
 
     @CsvBindByPosition(position = 3)
-    private BigDecimal rank;
+    private Long rank;
 }

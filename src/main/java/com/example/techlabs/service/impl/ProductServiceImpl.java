@@ -3,7 +3,10 @@ package com.example.techlabs.service.impl;
 import com.example.techlabs.csv.ProductCsvBean;
 import com.example.techlabs.entity.ProductEntity;
 import com.example.techlabs.repository.ProductJdbcRepository;
+import com.example.techlabs.repository.ProductJpaRepository;
 import com.example.techlabs.service.ProductService;
+import com.example.techlabs.service.ProductVO;
+import com.example.techlabs.service.ProductVOList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductJdbcRepository productJdbcRepository;
+    private final ProductJpaRepository productJpaRepository;
 
     @Override
     public int saveAll(List<ProductCsvBean> productCsvBeans) {
@@ -33,5 +37,24 @@ public class ProductServiceImpl implements ProductService {
                                 .lastModifiedBy("SYSTEM")
                                 .build())
                         .collect(Collectors.toList()));
+    }
+
+    @Override
+    public ProductVOList findAll() {
+        return ProductVOList.builder()
+                .productVOList(
+                        productJpaRepository.findAll().stream()
+                                .map(x -> ProductVO.builder()
+                                        .id(x.getId())
+                                        .itemId(x.getItemId())
+                                        .itemName(x.getItemName())
+                                        .itemImageUrl(x.getItemImageUrl())
+                                        .itemDescriptionUrl(x.getItemDescriptionUrl())
+                                        .originalPrice(x.getOriginalPrice())
+                                        .salePrice(x.getSalePrice())
+                                        .build())
+                                .collect(Collectors.toList())
+                )
+                .build();
     }
 }
