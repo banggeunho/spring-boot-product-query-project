@@ -1,6 +1,5 @@
 package com.example.techlabs.repository;
 
-import com.example.techlabs.entity.ProductEntity;
 import com.example.techlabs.entity.ProductRelationshipEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

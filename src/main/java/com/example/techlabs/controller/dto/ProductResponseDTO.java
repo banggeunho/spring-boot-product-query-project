@@ -1,6 +1,5 @@
 package com.example.techlabs.controller.dto;
 
-import com.example.techlabs.service.vo.ProductVOList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;

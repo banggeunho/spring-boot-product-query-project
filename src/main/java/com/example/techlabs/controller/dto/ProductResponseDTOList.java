@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 public class ProductResponseDTOList {
     @JsonProperty("target")
     private List<ProductResponseDTO> productResponseDTOList;
+    @JsonProperty("size")
+    private int size;
 
     public static ProductResponseDTOList from(ProductVOList voList) {
         return ProductResponseDTOList.builder()
@@ -29,6 +31,7 @@ public class ProductResponseDTOList {
                                         .salePrice(vo.getSalePrice())
                                         .build())
                                 .collect(Collectors.toList()))
+                .size(voList.getProductVOList().size())
                 .build();
     }
 }

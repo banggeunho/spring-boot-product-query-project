@@ -1,11 +1,11 @@
 package com.example.techlabs.entity;
-import javax.persistence.*;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 import org.hibernate.envers.Audited;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 @Getter
