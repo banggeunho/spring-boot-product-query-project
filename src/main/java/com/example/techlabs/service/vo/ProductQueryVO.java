@@ -29,4 +29,16 @@ public class ProductQueryVO {
                 .salePrice(this.getSalePrice())
                 .build();
     }
+
+    public static ProductQueryVO of(ProductEntity productEntity) {
+        return ProductQueryVO.builder()
+                .id(productEntity.getId())
+                .itemId(productEntity.getItemId())
+                .itemName(productEntity.getItemName())
+                .itemImageUrl(productEntity.getItemImageUrl())
+                .itemDescriptionUrl(productEntity.getItemDescriptionUrl())
+                .originalPrice(productEntity.getOriginalPrice())
+                .salePrice(productEntity.getSalePrice())
+                .build();
+    }
 }

@@ -7,10 +7,7 @@ import com.example.techlabs.entity.ProductRelationshipEntity;
 import com.example.techlabs.repository.ProductJdbcRepository;
 import com.example.techlabs.repository.ProductJpaRepository;
 import com.example.techlabs.service.ProductService;
-import com.example.techlabs.service.vo.ProductQueryVO;
-import com.example.techlabs.service.vo.ProductQueryVOList;
-import com.example.techlabs.service.vo.RelatedProductInfoVO;
-import com.example.techlabs.service.vo.RelatedProductInfoVOList;
+import com.example.techlabs.service.vo.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -82,6 +79,14 @@ public class ProductServiceImpl implements ProductService {
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public ProductQueryVO save(ProductCommandVO productCommandVO) {
+        productJpaRepository.findByItemId(productCommandVO.getItemId())
+                .ifPresent(product -> { throw new RuntimeException("Product with the specified item ID already exists."); });
+        //todo 예외처리 변경
+        return ProductQueryVO.of(productJpaRepository.save(ProductCommandVO.toEntity(productCommandVO)));
     }
 
     private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductRelationshipEntity> productRelationshipEntities) {
