@@ -1,9 +1,11 @@
-package com.example.techlabs.service;
+package com.example.techlabs.service.impl;
 
 import com.example.techlabs.csv.ProductRelationshipCsvBean;
 import com.example.techlabs.entity.ProductEntity;
 import com.example.techlabs.entity.ProductRelationshipEntity;
 import com.example.techlabs.repository.ProductRelationshipJdbcRepository;
+import com.example.techlabs.service.ProductRelationService;
+import com.example.techlabs.service.ProductVOList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
                                 .resultItemId(x.getResultItemId())
                                 .score(x.getScore())
                                 .rank(x.getRank())
+                                .isDel(false)
                                 .build())
                         .collect(Collectors.toList())
         );

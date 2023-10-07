@@ -31,13 +31,13 @@ public class ProductRelationshipJdbcRepository {
 
     private void insertProductRelationships(List<ProductRelationshipEntity> productRelationshipEntityList) {
 
-        log.debug(productRelationshipEntityList.toString());
-        log.debug(String.valueOf(productRelationshipEntityList.size()));
+//        log.debug(productRelationshipEntityList.toString());
+        log.debug("Inserted list size : {}", productRelationshipEntityList.size());
 
         String sql = "INSERT INTO PRODUCT_RELATIONSHIPS (" +
                 "TARGET_ITEM_ID, RESULT_ITEM_ID, SCORE, RANK," +
-                " CREATED_AT, CREATED_BY, LAST_MODIFIED_AT, LAST_MODIFIED_BY) " +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                " CREATED_AT, CREATED_BY, LAST_MODIFIED_AT, LAST_MODIFIED_BY, IS_DEL) " +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -50,6 +50,7 @@ public class ProductRelationshipJdbcRepository {
                         ps.setString(6, productRelationship.getCreatedBy());
                         ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
                         ps.setString(8, productRelationship.getLastModifiedBy());
+                        ps.setBoolean(9, productRelationship.getIsDel());
                     }
                     @Override
                     public int getBatchSize() {

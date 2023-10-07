@@ -4,11 +4,13 @@ import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.envers.Audited;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 @Getter
 @Setter
+@Audited
 @SuperBuilder
 @ToString(callSuper = true)
 @NoArgsConstructor
@@ -39,4 +41,8 @@ public class ProductRelationshipEntity extends BaseUpdateEntity implements Seria
     @Comment("연관 상품 순위")
     @Column(name = "rank", nullable = false)
     private Long rank;
+
+    @Comment("상품 삭제여부")
+    @Column(name = "is_del", nullable = false)
+    private Boolean isDel;
 }

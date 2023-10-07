@@ -35,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
                                 .itemImageUrl(x.getItemImageUrl())
                                 .createdBy("SYSTEM")
                                 .lastModifiedBy("SYSTEM")
+                                .isDel(false)
                                 .build())
                         .collect(Collectors.toList()));
     }

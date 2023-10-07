@@ -3,6 +3,8 @@ package com.example.techlabs.entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Audited
 @ToString(callSuper = true) //fixme 순환 호출
 @SuperBuilder
 @NoArgsConstructor
@@ -57,7 +60,10 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
 
     @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
+    @NotAudited
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
 
-    //TODO HISTORY 연관관계 매핑 설정
+//    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
+//    @ToString.Exclude
+//    private List<ProductHistoryEntity> productHistoryEntities = new ArrayList<>();
 }

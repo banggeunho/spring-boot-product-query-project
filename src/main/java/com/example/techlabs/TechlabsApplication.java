@@ -11,6 +11,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -22,6 +24,7 @@ import java.util.List;
 @Slf4j
 @SpringBootApplication
 @RequiredArgsConstructor
+@EnableJpaRepositories(repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class)
 public class TechlabsApplication {
 
     private static final String CSV_ROOT_DIR = "data/";
@@ -45,8 +48,8 @@ public class TechlabsApplication {
                 getResourcePath(REC_CSV_NAME),
                 ProductRelationshipCsvBean.class);
 
-        log.debug(productCsvBeans.toString());
-        log.debug(productRelationshipCsvBeans.toString());
+//        log.debug(productCsvBeans.toString());
+//        log.debug(productRelationshipCsvBeans.toString());
 
         productService.saveAll(productCsvBeans);
         productRelationService.saveAll(productRelationshipCsvBeans, productService.findAll());
