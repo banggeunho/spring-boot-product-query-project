@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Builder
-public class ProductVO {
+public class ProductCommandVO {
     private Long id;
     private Long itemId;
     private String itemName;

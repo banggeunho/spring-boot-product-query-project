@@ -4,7 +4,9 @@ import com.example.techlabs.csv.ProductRelationshipCsvBean;
 import com.example.techlabs.entity.ProductRelationshipEntity;
 import com.example.techlabs.repository.ProductRelationshipJdbcRepository;
 import com.example.techlabs.service.ProductRelationService;
-import com.example.techlabs.service.vo.ProductVOList;
+import com.example.techlabs.service.vo.ProductCommandVOList;
+import com.example.techlabs.service.vo.ProductQueryVO;
+import com.example.techlabs.service.vo.ProductQueryVOList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +21,12 @@ public class ProductRelationServiceImpl implements ProductRelationService {
 
     private final ProductRelationshipJdbcRepository productRelationshipJdbcRepository;
     @Override
-    public int saveAll(List<ProductRelationshipCsvBean> productRelationshipCsvBeans, ProductVOList productVOS) {
+    public int saveAll(List<ProductRelationshipCsvBean> productRelationshipCsvBeans, ProductQueryVOList productQueryVOList) {
         return productRelationshipJdbcRepository.saveAll(
                 productRelationshipCsvBeans.stream()
-                        .filter(x -> productVOS.isExistByItemId(x.getTargetItemId()))
+                        .filter(x -> productQueryVOList.isExistByItemId(x.getTargetItemId()))
                         .map(x -> ProductRelationshipEntity.builder()
-                                .product(productVOS.getByItemId(x.getTargetItemId()).toEntity())
+                                .product(productQueryVOList.getByItemId(x.getTargetItemId()).toEntity())
                                 .resultItemId(x.getResultItemId())
                                 .score(x.getScore())
                                 .rank(x.getRank())

@@ -20,7 +20,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "products")
+@Entity
 @Table(name = "products", indexes = @Index(name = "idx__item_id", columnList = "item_id"))
 public class ProductEntity extends BaseUpdateEntity implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -58,7 +58,7 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Column(name = "is_del", nullable = false)
     private Boolean isDel;
 
-    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
     @NotAudited
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
