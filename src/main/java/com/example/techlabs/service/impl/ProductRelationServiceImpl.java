@@ -29,6 +29,8 @@ public class ProductRelationServiceImpl implements ProductRelationService {
                                 .score(x.getScore())
                                 .rank(x.getRank())
                                 .isDel(false)
+                                .createdBy("SYSTEM")
+                                .lastModifiedBy("SYSTEM")
                                 .build())
                         .collect(Collectors.toList())
         );
