@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true) //fixme 순환 호출
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -55,6 +55,9 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Column(name = "is_del", nullable = false)
     private Boolean isDel;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
+
+    //TODO HISTORY 연관관계 매핑 설정
 }
