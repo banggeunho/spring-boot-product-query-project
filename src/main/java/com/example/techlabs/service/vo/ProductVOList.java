@@ -1,9 +1,8 @@
-package com.example.techlabs.service;
+package com.example.techlabs.service.vo;
 
 import lombok.Builder;
 import lombok.Getter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Getter

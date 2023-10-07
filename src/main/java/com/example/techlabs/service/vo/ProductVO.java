@@ -1,4 +1,4 @@
-package com.example.techlabs.service;
+package com.example.techlabs.service.vo;
 
 import com.example.techlabs.entity.ProductEntity;
 import lombok.Builder;
