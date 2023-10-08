@@ -24,7 +24,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
                 productRelationshipCsvBeans.stream()
                         .filter(x -> productQueryVOList.isExistByItemId(x.getTargetItemId()))
                         .map(x -> ProductRelationshipEntity.builder()
-                                .product(productQueryVOList.getByItemId(x.getTargetItemId()).toEntity())
+                                .targetProduct(productQueryVOList.getByTargetItemId(x.getTargetItemId()).toEntity())
                                 .resultItemId(x.getResultItemId())
                                 .score(x.getScore())
                                 .rank(x.getRank())

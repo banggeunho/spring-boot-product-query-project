@@ -26,11 +26,14 @@ public class ProductRelationshipEntity extends BaseUpdateEntity implements Seria
     private Long id;
 
     @Comment("타겟 상품 ID")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_item_id", referencedColumnName = "item_id", nullable = false)
-    private ProductEntity product;
+    private ProductEntity targetProduct;
 
     @Comment("연관된 상품 ID")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "result_item_id", referencedColumnName = "item_id", nullable = false)
+//    private ProductEntity resultProduct;
     @Column(name = "result_item_id", nullable = false)
     private Long resultItemId;
 

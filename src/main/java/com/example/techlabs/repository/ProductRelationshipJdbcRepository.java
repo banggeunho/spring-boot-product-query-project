@@ -41,7 +41,7 @@ public class ProductRelationshipJdbcRepository {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ProductRelationshipEntity productRelationship = productRelationshipEntityList.get(i);
-                        ps.setLong(1, productRelationship.getProduct().getItemId());
+                        ps.setLong(1, productRelationship.getTargetProduct().getItemId());
                         ps.setLong(2, productRelationship.getResultItemId());
                         ps.setBigDecimal(3, productRelationship.getScore());
                         ps.setLong(4, productRelationship.getRank());

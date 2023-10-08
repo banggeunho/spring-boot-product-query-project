@@ -58,12 +58,35 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Column(name = "is_del", nullable = false)
     private Boolean isDel;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @ToString.Exclude
+    @Builder.Default
     @NotAudited
+    @OneToMany(mappedBy = "targetProduct", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
 //    @ToString.Exclude
-//    private List<ProductHistoryEntity> productHistoryEntities = new ArrayList<>();
+//    @Builder.Default
+//    @NotAudited
+//    @OneToMany(mappedBy = "resultProduct", orphanRemoval = true, cascade = CascadeType.ALL)
+//    private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
+
+    public List<ResultProductInfo> getResultProductInfos() {
+        List<ResultProductInfo> resultProductIds = new ArrayList<>();
+        this.relatedProducts.forEach(x -> resultProductIds.add(
+                ResultProductInfo.builder()
+                        .itemId(x.getResultItemId())
+                        .rank(x.getRank())
+                        .score(x.getScore())
+                        .build()));
+
+        return resultProductIds;
+    }
+
+    @Builder
+    @Getter
+    public static class ResultProductInfo {
+        private BigDecimal score;
+        private Long rank;
+        private Long itemId;
+    }
 }

@@ -1,7 +1,6 @@
 package com.example.techlabs.repository;
 
 import com.example.techlabs.repository.entity.ProductEntity;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,8 +11,17 @@ import java.util.Optional;
 
 @Repository
 public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long> {
-    @Query("SELECT e FROM ProductEntity e WHERE e.itemId IN :itemIds AND e.isDel = :isDel")
-    List<ProductEntity> findByItemIdInAndIsDeleted(@Param("itemIds") List<Long> idList,
-                                                  @Param("isDel") @DefaultValue("false") boolean isDel);
+    @Query("SELECT DISTINCT e " +
+            "FROM ProductEntity e " +
+            "JOIN FETCH e.relatedProducts " +
+            "WHERE e.itemId IN :itemIds AND e.isDel = :isDel")
+//    @EntityGraph(value = "product-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
+    List<ProductEntity> findByItemIdInAndIsDeletedJoinRelationship(@Param("itemIds") List<Long> itemIds, @Param("isDel") boolean isDel);
+
+    @Query("SELECT e " +
+            "FROM ProductEntity e " +
+            "WHERE e.itemId IN :itemIds AND e.isDel = :isDel")
+    List<ProductEntity> findByItemIdInAndIsDeleted(@Param("itemIds") List<Long> itemIds, @Param("isDel") boolean isDel);
+
     Optional<ProductEntity> findByItemId(Long itemId);
 }

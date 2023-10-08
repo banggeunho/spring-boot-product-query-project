@@ -10,7 +10,14 @@ import java.util.List;
 public class ProductQueryVOList {
     private List<ProductQueryVO> productQueryVOList;
 
-    public ProductQueryVO getByItemId(Long itemId) {
+    public ProductQueryVO getByTargetItemId(Long itemId) {
+        return this.productQueryVOList.stream()
+                .filter(x -> x.getItemId().equals(itemId))
+                .findFirst()
+                .orElse(ProductQueryVO.builder().build()); //todo null 예외처리
+    }
+
+    public ProductQueryVO getByResultItemId(Long itemId) {
         return this.productQueryVOList.stream()
                 .filter(x -> x.getItemId().equals(itemId))
                 .findFirst()
