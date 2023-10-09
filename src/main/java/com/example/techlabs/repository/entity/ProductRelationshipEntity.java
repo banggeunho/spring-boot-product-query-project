@@ -16,7 +16,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_relationships", indexes = @Index(name = "idx__target_item_id", columnList = "target_item_id")) // todo 인덱스 재조정
+@Table(name = "product_relationships", indexes = {
+        @Index(name = "idx__target_item_id", columnList = "target_item_id"),
+        @Index(name = "idx__target_item_id__result_item_id", columnList = "target_item_id,result_item_id")
+})
 public class ProductRelationshipEntity extends BaseUpdateEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
