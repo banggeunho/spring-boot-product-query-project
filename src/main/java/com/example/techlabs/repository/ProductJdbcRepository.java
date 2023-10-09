@@ -34,7 +34,7 @@ public class ProductJdbcRepository {
 
         String sql = "INSERT INTO PRODUCTS (" +
                 "ITEM_ID, ITEM_IMAGE_URL, ITEM_DESCRIPTION_URL, ITEM_NAME, ORIGINAL_PRICE, SALE_PRICE," +
-                " CREATED_AT, CREATED_BY, LAST_MODIFIED_AT, LAST_MODIFIED_BY, IS_DEL) " +
+                " CREATED_AT, CREATED_BY, LAST_MODIFIED_AT, LAST_MODIFIED_BY, IS_DELETED) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
                     @Override
@@ -50,7 +50,7 @@ public class ProductJdbcRepository {
                         ps.setString(8, product.getCreatedBy());
                         ps.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
                         ps.setString(10, product.getLastModifiedBy());
-                        ps.setBoolean(11, product.getIsDel());
+                        ps.setBoolean(11, product.getIsDeleted());
                     }
                     @Override
                     public int getBatchSize() {

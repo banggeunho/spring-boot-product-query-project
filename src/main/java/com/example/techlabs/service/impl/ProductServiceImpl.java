@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
                                 .itemImageUrl(x.getItemImageUrl())
                                 .createdBy("SYSTEM")
                                 .lastModifiedBy("SYSTEM")
-                                .isDel(false)
+                                .isDeleted(false)
                                 .build())
                         .collect(Collectors.toList()));
     }
@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
         return ProductQueryVOList.builder()
                 .productQueryVOList(
                         productJpaRepository.findAll().stream()
-                                .filter(x -> !x.getIsDel())
+                                .filter(x -> !x.getIsDeleted())
                                 .map(x -> ProductQueryVO.builder()
                                         .id(x.getId())
                                         .itemId(x.getItemId())

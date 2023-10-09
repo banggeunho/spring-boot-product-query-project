@@ -38,7 +38,7 @@ public class ProductCommandVO {
                 .itemDescriptionUrl(vo.getItemDescriptionUrl())
                 .originalPrice(vo.getOriginalPrice())
                 .salePrice(vo.getSalePrice())
-                .isDel(false)
+                .isDeleted(false)
                 .build();
     }
 }

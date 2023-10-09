@@ -1,5 +1,6 @@
 package com.example.techlabs.repository.entity;
 
+import com.example.techlabs.service.vo.command.ProductCommandVO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Getter
@@ -54,27 +56,39 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Column(name = "sale_price", nullable = false)
     private BigDecimal salePrice;
 
-    @Comment("상품 삭제여부")
-    @Column(name = "is_del", nullable = false)
-    private Boolean isDel;
-
     @ToString.Exclude
     @Builder.Default
     @NotAudited
     @OneToMany(mappedBy = "targetProduct", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
 
-//    @ToString.Exclude
-//    @Builder.Default
-//    @NotAudited
-//    @OneToMany(mappedBy = "resultProduct", orphanRemoval = true, cascade = CascadeType.ALL)
-//    private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
+    @ToString.Exclude
+    @Builder.Default
+    @NotAudited
+    @OneToMany(mappedBy = "resultProduct", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
+
+    public void update(ProductCommandVO productCommandVO) {
+        this.setItemId(productCommandVO.getItemId());
+        this.setItemName(productCommandVO.getItemName());
+        this.setItemImageUrl(productCommandVO.getItemImageUrl());
+        this.setItemDescriptionUrl(productCommandVO.getItemDescriptionUrl());
+        this.setOriginalPrice(productCommandVO.getOriginalPrice());
+        this.setSalePrice(productCommandVO.getSalePrice());
+        super.onUpdate();
+    }
+
+    public void delete(Long itemId) {
+        super.onDelete();
+        this.relatedProducts.removeIf(x -> Objects.equals(x.getTargetProduct().getId(), itemId));
+        this.resultProducts.removeIf(x -> Objects.equals(x.getResultProduct().getId(), itemId));
+    }
 
     public List<ResultProductInfo> getResultProductInfos() {
         List<ResultProductInfo> resultProductIds = new ArrayList<>();
         this.relatedProducts.forEach(x -> resultProductIds.add(
                 ResultProductInfo.builder()
-                        .itemId(x.getResultItemId())
+                        .itemId(x.getResultProduct().getItemId())
                         .rank(x.getRank())
                         .score(x.getScore())
                         .build()));

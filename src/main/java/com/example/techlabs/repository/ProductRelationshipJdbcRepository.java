@@ -35,21 +35,21 @@ public class ProductRelationshipJdbcRepository {
 
         String sql = "INSERT INTO PRODUCT_RELATIONSHIPS (" +
                 "TARGET_ITEM_ID, RESULT_ITEM_ID, SCORE, RANK," +
-                " CREATED_AT, CREATED_BY, LAST_MODIFIED_AT, LAST_MODIFIED_BY, IS_DEL) " +
+                " CREATED_AT, CREATED_BY, LAST_MODIFIED_AT, LAST_MODIFIED_BY, IS_DELETED) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ProductRelationshipEntity productRelationship = productRelationshipEntityList.get(i);
                         ps.setLong(1, productRelationship.getTargetProduct().getItemId());
-                        ps.setLong(2, productRelationship.getResultItemId());
+                        ps.setLong(2, productRelationship.getResultProduct().getItemId());
                         ps.setBigDecimal(3, productRelationship.getScore());
                         ps.setLong(4, productRelationship.getRank());
                         ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
                         ps.setString(6, productRelationship.getCreatedBy());
                         ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
                         ps.setString(8, productRelationship.getLastModifiedBy());
-                        ps.setBoolean(9, productRelationship.getIsDel());
+                        ps.setBoolean(9, productRelationship.getIsDeleted());
                     }
                     @Override
                     public int getBatchSize() {
