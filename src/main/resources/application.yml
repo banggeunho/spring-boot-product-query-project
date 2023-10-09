@@ -18,6 +18,7 @@ spring:
         format_sql: true
         show_sql: true
         highlight_sql: true
+        default_batch_fetch_size: 100
       org.hibernate.envers.audit_table_suffix: _history
       org.hibernate.envers.revision_field_name: revision_id
       org.hibernate.envers.store_data_at_delete: true

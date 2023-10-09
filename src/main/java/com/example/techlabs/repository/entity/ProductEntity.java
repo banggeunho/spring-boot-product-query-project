@@ -4,6 +4,7 @@ import com.example.techlabs.service.vo.command.ProductCommandVO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -60,6 +61,7 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Builder.Default
     @NotAudited
     @OneToMany(mappedBy = "targetProduct", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Where(clause = "is_deleted = false")
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
 
     @ToString.Exclude

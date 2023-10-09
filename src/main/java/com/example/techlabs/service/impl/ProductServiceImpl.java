@@ -4,6 +4,7 @@ import com.example.techlabs.base.csv.ProductCsvBean;
 import com.example.techlabs.repository.entity.ProductEntity;
 import com.example.techlabs.repository.ProductJdbcRepository;
 import com.example.techlabs.repository.ProductJpaRepository;
+import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import com.example.techlabs.service.ProductService;
 import com.example.techlabs.service.vo.command.ProductCommandVO;
 import com.example.techlabs.service.vo.query.ProductQueryVO;
@@ -82,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
                                         .itemDescriptionUrl(productEntity.getItemDescriptionUrl())
                                         .originalPrice(productEntity.getOriginalPrice())
                                         .salePrice(productEntity.getSalePrice())
-                                        .relatedProductInfoVOList(mapRelatedItemInfo(productEntity.getResultProductInfos()))
+                                        .relatedProductInfoVOList(mapRelatedItemInfo(productEntity.getRelatedProducts()))
                                         .build())
                                 .collect(Collectors.toList()))
                 .build();
@@ -95,28 +96,47 @@ public class ProductServiceImpl implements ProductService {
         return ProductQueryVO.of(productJpaRepository.save(ProductCommandVO.toEntity(productCommandVO)));
     }
 
-    private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductEntity.ResultProductInfo> resultProductInfoList) {
+    private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductRelationshipEntity> entities) {
         log.debug("mapping related Product");
-        List<Long> resultProductIds = resultProductInfoList.stream()
-                .map(ProductEntity.ResultProductInfo::getItemId)
-                .collect(Collectors.toList());
-
         return RelatedProductInfoVOList.builder()
-                .voList(productJpaRepository.findByItemIdInAndIsDeleted(resultProductIds, false).stream()
+                .voList(entities.stream()
                         .map(entity -> RelatedProductInfoVO.builder()
-                                .itemId(entity.getItemId())
-                                .itemName(entity.getItemName())
-                                .itemImageUrl(entity.getItemImageUrl())
-                                .itemDescriptionUrl(entity.getItemDescriptionUrl())
-                                .originalPrice(entity.getOriginalPrice())
-                                .salePrice(entity.getSalePrice())
-                                .score(getScoreByItemId(resultProductInfoList, entity.getItemId()))
-                                .rank(getRankByItemId(resultProductInfoList, entity.getItemId()))
+                                .itemId(entity.getResultProduct().getItemId())
+                                .itemName(entity.getResultProduct().getItemName())
+                                .itemImageUrl(entity.getResultProduct().getItemImageUrl())
+                                .itemDescriptionUrl(entity.getResultProduct().getItemDescriptionUrl())
+                                .originalPrice(entity.getResultProduct().getOriginalPrice())
+                                .salePrice(entity.getResultProduct().getSalePrice())
+                                .score(entity.getScore())
+                                .rank(entity.getRank())
                                 .build())
                         .sorted(Comparator.comparing(RelatedProductInfoVO::getRank))
                         .collect(Collectors.toList()))
                 .build();
     }
+
+//    private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductEntity.ResultProductInfo> resultProductInfoList) {
+//        log.debug("mapping related Product");
+//        List<Long> resultProductIds = resultProductInfoList.stream()
+//                .map(ProductEntity.ResultProductInfo::getItemId)
+//                .collect(Collectors.toList());
+//
+//        return RelatedProductInfoVOList.builder()
+//                .voList(productJpaRepository.findByItemIdInAndIsDeleted(resultProductIds, false).stream()
+//                        .map(entity -> RelatedProductInfoVO.builder()
+//                                .itemId(entity.getItemId())
+//                                .itemName(entity.getItemName())
+//                                .itemImageUrl(entity.getItemImageUrl())
+//                                .itemDescriptionUrl(entity.getItemDescriptionUrl())
+//                                .originalPrice(entity.getOriginalPrice())
+//                                .salePrice(entity.getSalePrice())
+//                                .score(getScoreByItemId(resultProductInfoList, entity.getItemId()))
+//                                .rank(getRankByItemId(resultProductInfoList, entity.getItemId()))
+//                                .build())
+//                        .sorted(Comparator.comparing(RelatedProductInfoVO::getRank))
+//                        .collect(Collectors.toList()))
+//                .build();
+//    }
 
     private BigDecimal getScoreByItemId(List<ProductEntity.ResultProductInfo> resultProductInfoList, Long itemId) {
         Optional<ProductEntity.ResultProductInfo> result = resultProductInfoList.stream()
