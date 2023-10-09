@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_relationships", indexes = @Index(name = "idx__target_item_id", columnList = "target_item_id"))
+@Table(name = "product_relationships", indexes = @Index(name = "idx__target_item_id", columnList = "target_item_id")) // todo 인덱스 재조정
 public class ProductRelationshipEntity extends BaseUpdateEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -34,6 +34,7 @@ public class ProductRelationshipEntity extends BaseUpdateEntity implements Seria
     @Comment("연관된 상품 ID")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "result_item_id", referencedColumnName = "item_id", nullable = false)
+    @ToString.Exclude
     private ProductEntity resultProduct;
 
     @Comment("연관도 점수")

@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @Getter
@@ -68,6 +67,7 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Builder.Default
     @NotAudited
     @OneToMany(mappedBy = "resultProduct", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Where(clause = "is_deleted = false")
     private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
 
     public void update(ProductCommandVO productCommandVO) {
@@ -78,12 +78,13 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
         this.setOriginalPrice(productCommandVO.getOriginalPrice());
         this.setSalePrice(productCommandVO.getSalePrice());
         super.onUpdate();
+
     }
 
-    public void delete(Long itemId) {
+    public void delete() {
+        this.getRelatedProducts().forEach(x -> x.setIsDeleted(true));
+        this.getResultProducts().forEach(x -> x.setIsDeleted(true));
         super.onDelete();
-        this.relatedProducts.removeIf(x -> Objects.equals(x.getTargetProduct().getId(), itemId));
-        this.resultProducts.removeIf(x -> Objects.equals(x.getResultProduct().getId(), itemId));
     }
 
     public List<ResultProductInfo> getResultProductInfos() {
@@ -104,5 +105,18 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
         private BigDecimal score;
         private Long rank;
         private Long itemId;
+    }
+
+    public static ProductEntity of(ProductCommandVO vo) {
+        return ProductEntity.builder()
+                .id(vo.getId() != null ? vo.getId() : null)
+                .itemId(vo.getItemId())
+                .itemName(vo.getItemName())
+                .itemImageUrl(vo.getItemImageUrl())
+                .itemDescriptionUrl(vo.getItemDescriptionUrl())
+                .originalPrice(vo.getOriginalPrice())
+                .salePrice(vo.getSalePrice())
+                .isDeleted(false)
+                .build();
     }
 }

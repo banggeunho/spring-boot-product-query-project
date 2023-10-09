@@ -1,10 +1,9 @@
 package com.example.techlabs.repository.entity;
 
-import com.example.techlabs.service.vo.command.ProductCommandVO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import net.bytebuddy.asm.Advice;
 import org.hibernate.annotations.Comment;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -21,6 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @SuperBuilder
 @MappedSuperclass
+@Audited
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseUpdateEntity {
 

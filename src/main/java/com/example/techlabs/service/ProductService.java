@@ -2,6 +2,7 @@ package com.example.techlabs.service;
 
 import com.example.techlabs.base.csv.ProductCsvBean;
 import com.example.techlabs.service.vo.command.ProductCommandVO;
+import com.example.techlabs.service.vo.command.ProductCommandVOList;
 import com.example.techlabs.service.vo.query.ProductQueryVO;
 import com.example.techlabs.service.vo.query.ProductQueryVOList;
 
@@ -12,4 +13,6 @@ public interface ProductService {
     ProductQueryVOList findAll();
     ProductQueryVOList findByInIdList(List<Long> targetIdList);
     ProductQueryVO save(ProductCommandVO productCommandVO);
+    void delete(List<Long> itemIdList);
+    void update(ProductCommandVOList productCommandVO);
 }

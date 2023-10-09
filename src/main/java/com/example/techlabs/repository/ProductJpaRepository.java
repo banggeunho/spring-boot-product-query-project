@@ -1,7 +1,6 @@
 package com.example.techlabs.repository;
 
 import com.example.techlabs.repository.entity.ProductEntity;
-import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,14 +14,14 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
     @Query("SELECT DISTINCT e " +
             "FROM ProductEntity e " +
             "JOIN FETCH e.relatedProducts " +
-            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDel")
+            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDeleted")
 //    @EntityGraph(value = "product-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
-    List<ProductEntity> findByItemIdInAndIsDeletedJoinRelationship(@Param("itemIds") List<Long> itemIds, @Param("isDel") boolean isDel);
+    List<ProductEntity> findByItemIdInAndIsDeletedJoinRelationship(@Param("itemIds") List<Long> itemIds, @Param("isDeleted") boolean isDeleted);
 
     @Query("SELECT e " +
             "FROM ProductEntity e " +
-            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDel")
-    List<ProductEntity> findByItemIdInAndIsDeleted(@Param("itemIds") List<Long> itemIds, @Param("isDel") boolean isDel);
+            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDeleted")
+    List<ProductEntity> findByItemIdInAndIsDeleted(@Param("itemIds") List<Long> itemIds, @Param("isDeleted") boolean isDeleted);
 
     @Query("SELECT DISTINCT rp.resultProduct FROM ProductRelationshipEntity rp WHERE rp.targetProduct IN :products")
     List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
@@ -31,4 +30,6 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 //    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
 
     Optional<ProductEntity> findByItemId(Long itemId);
+
+    Optional<ProductEntity> findByItemIdAndIsDeleted(Long itemId, boolean isDeleted);
 }
