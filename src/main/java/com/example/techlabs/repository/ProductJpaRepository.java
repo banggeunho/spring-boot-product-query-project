@@ -23,6 +23,12 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
             "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDeleted")
     List<ProductEntity> findByItemIdInAndIsDeleted(@Param("itemIds") List<Long> itemIds, @Param("isDeleted") boolean isDeleted);
 
+    @Query("SELECT DISTINCT e " +
+            "FROM ProductEntity e " +
+            "JOIN FETCH e.relatedProducts " +
+            "WHERE e.itemId = :itemId AND e.isDeleted = :isDeleted")
+    Optional<ProductEntity> findByItemIdAndIsDeletedWithJoin(@Param("itemId") Long itemId, @Param("isDeleted") boolean isDeleted);
+
     @Query("SELECT DISTINCT rp.resultProduct FROM ProductRelationshipEntity rp WHERE rp.targetProduct IN :products")
     List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
 
