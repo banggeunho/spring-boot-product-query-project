@@ -1,7 +1,10 @@
 package com.example.techlabs.repository.entity;
 
+import com.example.techlabs.service.vo.command.ProductCommandVO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import net.bytebuddy.asm.Advice;
+import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -37,6 +40,10 @@ public abstract class BaseUpdateEntity {
     @Column
     private String lastModifiedBy;
 
+    @Comment("상품 삭제여부")
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -46,5 +53,11 @@ public abstract class BaseUpdateEntity {
     @PreUpdate
     public void onUpdate() {
         this.lastModifiedAt = LocalDateTime.now();
+    }
+
+    @PreRemove
+    public void onDelete() {
+        this.lastModifiedAt = LocalDateTime.now();
+        this.isDeleted = true;
     }
 }
