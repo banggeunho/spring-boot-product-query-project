@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 @Getter
 @Setter
-@Audited
 @SuperBuilder
 @ToString(callSuper = true)
 @NoArgsConstructor

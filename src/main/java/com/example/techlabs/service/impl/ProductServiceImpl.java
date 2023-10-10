@@ -101,14 +101,8 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void delete(List<Long> itemIdList) {
-
         productJpaRepository.bulkUpdateIsDeleted(itemIdList);
         productRelationJpaRepository.bulkUpdateIsDeleted(itemIdList);
-
-//        List<ProductEntity> entities = productJpaRepository.findByItemIdInAndIsDeletedJoinRelationship(itemIdList, false);
-//
-//        entities.forEach(ProductEntity::delete);
-//        productRelationJpaRepository.findByResultItemIdInAndIsDeleted(itemIdList, false).forEach(x -> x.setIsDeleted(true));
     }
 
     @Transactional
