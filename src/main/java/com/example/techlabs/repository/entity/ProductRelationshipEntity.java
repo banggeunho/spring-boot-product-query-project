@@ -3,7 +3,6 @@ package com.example.techlabs.repository.entity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
-import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

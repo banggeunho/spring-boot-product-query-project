@@ -43,11 +43,12 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
             "AND p.isDeleted = false")
     void bulkUpdateIsDeleted(@Param("itemIdList") List<Long> itemIdList);
 
-//    @Query("SELECT DISTINCT rp.resultProduct FROM ProductRelationshipEntity rp WHERE rp.targetProduct IN :products")
-//    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
-
-//    @Query("SELECT DISTINCT pe.resultProduct FROM ProductEntity pe WHERE pe IN :products")
-//    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
+    @Modifying
+    @Query("UPDATE ProductEntity p SET " +
+            "p.isDeleted = true " +
+            "WHERE p.itemId IN :itemIdList " +
+            "AND p.isDeleted = false")
+    void bulkUpdate(@Param("itemIdList") List<Long> itemIdList);
 
     Optional<ProductEntity> findByItemId(Long itemId);
 

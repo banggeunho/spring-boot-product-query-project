@@ -46,6 +46,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductRelationCommandVO save(ProductRelationCommandVO vo) {
 
         ProductEntity targetProduct = productJpaRepository.findByItemIdAndIsDeletedWithJoin(vo.getTargetItemId(), false)
@@ -88,6 +89,8 @@ public class ProductRelationServiceImpl implements ProductRelationService {
             relationshipEntity.setRank(rank);
             rank ++;
         }
+
+        productRelationshipJdbcRepository.updateRanking(relationshipEntitieList);
 
         return newRank;
     }
