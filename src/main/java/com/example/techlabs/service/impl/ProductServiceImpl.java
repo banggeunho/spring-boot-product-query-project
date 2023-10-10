@@ -5,7 +5,6 @@ import com.example.techlabs.repository.ProductJdbcRepository;
 import com.example.techlabs.repository.ProductJpaRepository;
 import com.example.techlabs.repository.ProductRelationJpaRepository;
 import com.example.techlabs.repository.entity.ProductEntity;
-import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import com.example.techlabs.service.ProductService;
 import com.example.techlabs.service.vo.command.ProductCommandVO;
 import com.example.techlabs.service.vo.command.ProductCommandVOList;

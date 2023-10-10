@@ -1,7 +1,6 @@
 package com.example.techlabs.service.vo.command;
 
 import com.example.techlabs.controller.command.dto.ProductRelationCommandRequestDTO;
-import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import lombok.Builder;
 import lombok.Getter;
 

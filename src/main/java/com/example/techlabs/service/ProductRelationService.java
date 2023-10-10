@@ -1,7 +1,6 @@
 package com.example.techlabs.service;
 
 import com.example.techlabs.base.csv.ProductRelationshipCsvBean;
-import com.example.techlabs.controller.command.dto.ProductRelationCommandRequestDTO;
 import com.example.techlabs.service.vo.command.ProductRelationCommandVO;
 import com.example.techlabs.service.vo.query.ProductQueryVOList;
 
