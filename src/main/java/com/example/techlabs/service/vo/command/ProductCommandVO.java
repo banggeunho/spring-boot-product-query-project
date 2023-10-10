@@ -38,6 +38,8 @@ public class ProductCommandVO {
                 .itemDescriptionUrl(vo.getItemDescriptionUrl())
                 .originalPrice(vo.getOriginalPrice())
                 .salePrice(vo.getSalePrice())
+                .createdBy("SYSTEM")
+                .lastModifiedBy("SYSTEM")
                 .isDeleted(false)
                 .build();
     }

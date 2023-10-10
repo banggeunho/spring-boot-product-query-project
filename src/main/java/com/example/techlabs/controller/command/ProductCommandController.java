@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +21,17 @@ public class ProductCommandController {
     private final ProductService productService;
     @PostMapping("") //todo 검증 추가..
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductCommandResponseDTO save(@RequestBody ProductCommandRequestDTO dto) {
-        return ProductCommandResponseDTO.of(productService.save(ProductCommandVO.of(dto)));
+    public List<ProductCommandResponseDTO> save(@RequestBody List<ProductCommandRequestDTO> dtoList) {
+        return productService.save(
+                        ProductCommandVOList.builder()
+                                .productCommandVOList(
+                                        dtoList.stream()
+                                                .map(ProductCommandVO::of)
+                                                .collect(Collectors.toList()))
+                                .build())
+                .getProductQueryVOList().stream()
+                .map(ProductCommandResponseDTO::of)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("")

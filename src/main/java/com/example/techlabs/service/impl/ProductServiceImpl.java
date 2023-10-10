@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
@@ -31,10 +32,9 @@ public class ProductServiceImpl implements ProductService {
     private final ProductJpaRepository productJpaRepository;
     private final ProductRelationJpaRepository productRelationJpaRepository;
 
-    @Transactional
     @Override
-    public int saveAll(List<ProductCsvBean> productCsvBeans) {
-        return productJdbcRepository.saveAll(
+    public void saveAll(List<ProductCsvBean> productCsvBeans) {
+        productJdbcRepository.saveAll(
                 productCsvBeans.stream()
                         .map(x -> ProductEntity.builder()
                                 .itemId(x.getItemId())
@@ -90,22 +90,58 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    @Transactional
     @Override
-    public ProductQueryVO save(ProductCommandVO productCommandVO) {
-        productJpaRepository.findByItemId(productCommandVO.getItemId())
-                .ifPresent(product -> { throw new RuntimeException("Product with the specified item ID already exists.");}); //todo 예외처리 변경
-        return ProductQueryVO.of(productJpaRepository.save(ProductCommandVO.toEntity(productCommandVO)));
+    public ProductQueryVOList save(ProductCommandVOList productCommandVOList) {
+
+        List<Long> idList = productCommandVOList.getProductCommandVOList().stream()
+                .map(ProductCommandVO::getItemId)
+                .collect(Collectors.toList());
+
+        List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeleted(idList,false);
+
+        Map<Long, ProductEntity> productEntityMap = productEntityList.stream()
+                .collect(Collectors.toMap(ProductEntity::getItemId, Function.identity()));
+
+        productEntityList.stream()
+                .filter(productEntity -> productEntityMap.containsKey(productEntity.getItemId()))
+                .findFirst()
+                .ifPresent(productEntity -> { throw new RuntimeException(String.format("해당 상품이 이미 존재합니다.", productEntity.getItemId()));});
+
+        productJdbcRepository.saveAll(productCommandVOList.getProductCommandVOList().stream()
+                .map(ProductCommandVO::toEntity)
+                .collect(Collectors.toList()));
+
+        return ProductQueryVOList.builder()
+                .productQueryVOList(productCommandVOList.getProductCommandVOList().stream()
+                        .map(vo -> ProductQueryVO.builder()
+                                .itemId(vo.getItemId())
+                                .itemName(vo.getItemName())
+                                .itemImageUrl(vo.getItemImageUrl())
+                                .itemDescriptionUrl(vo.getItemDescriptionUrl())
+                                .originalPrice(vo.getOriginalPrice())
+                                .salePrice(vo.getSalePrice())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
     }
 
-    @Transactional
     @Override
     public void delete(List<Long> itemIdList) {
+        List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeleted(itemIdList, false);
+
+        Map<Long, ProductEntity> productEntityMap = productEntityList.stream()
+                .collect(Collectors.toMap(ProductEntity::getItemId, Function.identity()));
+
+        itemIdList.stream()
+                .filter(id -> !productEntityMap.containsKey(id))
+                .findFirst()
+                .ifPresent(id -> {throw new RuntimeException(String.format("해당 품목이 존재하지 않습니다. {}", id));});
+
         productJpaRepository.bulkUpdateIsDeleted(itemIdList);
         productRelationJpaRepository.bulkUpdateIsDeleted(itemIdList);
     }
 
-    @Transactional
+    @Transactional(readOnly = true) // jpa의 dirty checking을 disable 하기 위해 readonly 활성화
     @Override
     public void update(ProductCommandVOList voList) {
 //        // 개별 쿼리 버전
@@ -135,6 +171,8 @@ public class ProductServiceImpl implements ProductService {
                 .ifPresent(vo -> {throw new RuntimeException(String.format("해당 품목이 존재하지 않습니다. {}", vo.getItemId()));});
 
         voList.getProductCommandVOList().forEach(vo -> productEntityMap.get(vo.getItemId()).update(vo));
+
+        productJdbcRepository.updateProductInfo(productEntityList);
     }
 
     private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductEntity.ResultProductInfo> resultProductInfoList) {
