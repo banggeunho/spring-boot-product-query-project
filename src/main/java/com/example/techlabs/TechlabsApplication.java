@@ -9,16 +9,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.envers.repository.support.EnversRevisionRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -48,23 +43,8 @@ public class TechlabsApplication {
                 CSV_ROOT_DIR + REC_CSV_NAME,
                 ProductRelationshipCsvBean.class);
 
-//        log.debug(productCsvBeans.toString());
-//        log.debug(productRelationshipCsvBeans.toString());
-
         productService.saveAll(productCsvBeans);
         productRelationService.saveAll(productRelationshipCsvBeans, productService.findAll());
 
-    }
-
-    private Path getResourcePath(String resourceName) throws IOException {
-        Resource resource = new ClassPathResource(CSV_ROOT_DIR + resourceName);
-        log.debug(resource.getURI().toString());
-        if (resource.exists()) {
-            try (InputStream inputStream = resource.getInputStream()) {
-                return Paths.get(resource.getURI());
-            }
-        } else {
-            throw new IOException("Resource not found: " + resourceName);
-        }
     }
 }
