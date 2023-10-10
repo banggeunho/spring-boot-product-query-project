@@ -19,6 +19,8 @@ public interface ProductRelationJpaRepository extends JpaRepository<ProductRelat
 
     List<ProductRelationshipEntity> findByTargetProductAndIsDeleted(ProductEntity targetProduct, boolean isDeleted);
 
+    List<ProductRelationshipEntity> findByResultItemIdInAndIsDeleted(List<Long> resultItemId, boolean isDeleted);
+
 //    Optional
 
 }

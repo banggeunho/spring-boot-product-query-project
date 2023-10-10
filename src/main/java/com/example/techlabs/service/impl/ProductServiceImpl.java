@@ -3,6 +3,7 @@ package com.example.techlabs.service.impl;
 import com.example.techlabs.base.csv.ProductCsvBean;
 import com.example.techlabs.repository.ProductJdbcRepository;
 import com.example.techlabs.repository.ProductJpaRepository;
+import com.example.techlabs.repository.ProductRelationJpaRepository;
 import com.example.techlabs.repository.entity.ProductEntity;
 import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import com.example.techlabs.service.ProductService;
@@ -29,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductJdbcRepository productJdbcRepository;
     private final ProductJpaRepository productJpaRepository;
+    private final ProductRelationJpaRepository productRelationJpaRepository;
 
     @Override
     public int saveAll(List<ProductCsvBean> productCsvBeans) {
@@ -62,7 +64,6 @@ public class ProductServiceImpl implements ProductService {
                                         .itemDescriptionUrl(x.getItemDescriptionUrl())
                                         .originalPrice(x.getOriginalPrice())
                                         .salePrice(x.getSalePrice())
-//                                        .relatedProductInfoVOList(mapRelatedItemInfo(x.getResultProductInfos()))
                                         .build())
                                 .collect(Collectors.toList())
                 )
@@ -97,7 +98,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(List<Long> itemIdList) {
-        productJpaRepository.findByItemIdInAndIsDeleted(itemIdList, false).forEach(ProductEntity::delete);
+
+        List<ProductEntity> entities = productJpaRepository.findByItemIdInAndIsDeleted(itemIdList, false);
+        List<Long> idList = entities.stream().map(ProductEntity::getItemId).collect(Collectors.toList());
+
+        entities.forEach(ProductEntity::delete);
+        productRelationJpaRepository.findByResultItemIdInAndIsDeleted(idList, false).forEach(x -> x.setIsDeleted(true));
     }
 
     @Override

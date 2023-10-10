@@ -59,15 +59,7 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @Builder.Default
     @NotAudited
     @OneToMany(mappedBy = "targetProduct", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-//    @Where(clause = "is_deleted = false")
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
-
-//    @ToString.Exclude
-//    @Builder.Default
-//    @NotAudited
-//    @OneToMany(mappedBy = "resultProduct", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-//    @Where(clause = "is_deleted = false")
-//    private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
 
     public void update(ProductCommandVO productCommandVO) {
         this.setItemId(productCommandVO.getItemId());
