@@ -22,14 +22,33 @@ contact : panggeunho@gmail.com / 010-3767-8836
 - springdoc-openapi-ui : 간단한 api 검증을 위한 swagger
 - opencsv 5.x : CSV Parsing
 
+## Build & Run
+
+```bash
+chmod +x /gradlew
+./gradlew build
+java -jar ./build/libs/*.jar
+```
+
+## Swagger & DB Info
+
+```bash
+Swagger: http://localhost:8080/swagger-ui/index.html
+
+h2-database: http://localhost:8080/h2-console
+ - Driver Class: org.h2.Driver
+ - JDBC URL: jdbc:h2:mem:testdb
+ - Username : sa
+ - password : 없음
+```
+
 ## Developed Contents
 
 - Open CSV를 이용하여 어플리케이션 실행 시 CSV에서 데이터를 추출하고 DB에 저장
     - 성능 개선을 위해 벌크 삽입 처리
     - JPA의 ID 생성 정책에 따른 제한으로 Spring JDBC Template을 이용하여 벌크 삽입 처리
-
 - Spring-data-envers를 이용하여 상품 정보 이력 관리
-
+- 빠른 조회를 위해 상품 테이블과 상품 연관 정보 테이블에 item_id에 대해 인덱스 생성
 - 상품 조회 API 구현
     - 기존 JPA를 사용하여 Product의 item_id와 Rec의 target_item_id, result_item_id를 Mapping 하여 조회하였으나, N+1문제와 Lazy Loading 설정이 적용되지 않는 문제가 발생해 쿼리 I/O 최적화를 위해 일부 Mapping 제거 후 구현
     - [프로세스]
@@ -126,6 +145,7 @@ contact : panggeunho@gmail.com / 010-3767-8836
 - 연관 상품 정보 삭제 API 구현
     - is_deleted 컬럼을 두어 데이터는 유지하되, 조회는 되지 않도록 하였습니다.
     - [프로세스]
+
         ```jsx
         1. 상품 정보 입력 API 호출
         2. 요청된 target_id를 통해 상품이 존재하는지 조회 (fetch join)
@@ -136,3 +156,4 @@ contact : panggeunho@gmail.com / 010-3767-8836
         7. 삭제된 연관정보를 제외하고 랭킹을 갱신합니다.
         8. 변경된 entity들을 list로 만들어 bulk update 합니다.
         ```
+        
