@@ -57,7 +57,7 @@ public class ProductRelationshipJdbcRepository {
     }
 
     public void updateRanking(List<ProductRelationshipEntity> productRelationshipEntityList) {
-        String sql = "UPDATE product_relationships SET rank = ?, score = ?, is_deleted = ? WHERE target_item_id = ? AND result_item_id = ?";
+        String sql = "UPDATE product_relationships SET rank = ?, score = ?, is_deleted = ?, last_modified_at = ? WHERE target_item_id = ? AND result_item_id = ?";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
@@ -66,8 +66,9 @@ public class ProductRelationshipJdbcRepository {
                 ps.setLong(1, productRelationship.getRank());
                 ps.setBigDecimal(2, productRelationship.getScore());
                 ps.setBoolean(3, productRelationship.getIsDeleted());
-                ps.setLong(4, productRelationship.getTargetProduct().getItemId());
-                ps.setLong(5, productRelationship.getResultItemId());
+                ps.setTimestamp(4, Timestamp.valueOf(productRelationship.getLastModifiedAt()));
+                ps.setLong(5, productRelationship.getTargetProduct().getItemId());
+                ps.setLong(6, productRelationship.getResultItemId());
             }
 
             @Override

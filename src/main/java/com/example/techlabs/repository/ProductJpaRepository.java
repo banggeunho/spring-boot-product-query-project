@@ -38,7 +38,8 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 
     @Modifying
     @Query("UPDATE ProductEntity p SET " +
-            "p.isDeleted = true " +
+            "p.isDeleted = true, " +
+            "p.lastModifiedAt = NOW()" +
             "WHERE p.itemId IN :itemIdList " +
             "AND p.isDeleted = false")
     void bulkUpdateIsDeleted(@Param("itemIdList") List<Long> itemIdList);

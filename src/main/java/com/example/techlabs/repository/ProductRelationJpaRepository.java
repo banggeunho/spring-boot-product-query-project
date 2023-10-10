@@ -16,7 +16,8 @@ public interface ProductRelationJpaRepository extends JpaRepository<ProductRelat
 
     @Modifying
     @Query("update ProductRelationshipEntity p " +
-            "set p.isDeleted = :isDeleted " +
+            "set p.isDeleted = :isDeleted, " +
+            "p.lastModifiedAt = NOW()" +
             "where p.targetProduct.itemId = :targetItemId and p.resultItemId = :resultItemId")
     void updateIsDeleted(@Param("targetItemId") Long targetId, @Param("resultItemId") Long resultId, @Param("isDeleted") boolean isDeleted);
 
@@ -30,7 +31,8 @@ public interface ProductRelationJpaRepository extends JpaRepository<ProductRelat
 
     @Modifying
     @Query("UPDATE ProductRelationshipEntity p " +
-            "SET p.isDeleted = true " +
+            "SET p.isDeleted = true, " +
+            "p.lastModifiedAt = NOW()" +
             "WHERE ((p.targetProduct.itemId IN :itemIdList) OR (p.resultItemId IN :itemIdList)) " +
             "AND p.isDeleted = false")
     void bulkUpdateIsDeleted(@Param("itemIdList") List<Long> itemIdList);

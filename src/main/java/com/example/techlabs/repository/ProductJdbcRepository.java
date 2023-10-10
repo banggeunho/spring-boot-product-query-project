@@ -1,6 +1,7 @@
 package com.example.techlabs.repository;
 
 import com.example.techlabs.repository.entity.ProductEntity;
+import com.example.techlabs.repository.entity.ProductRelationshipEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +23,9 @@ public class ProductJdbcRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public int saveAll(List<ProductEntity> productEntityList) {
+    public void saveAll(List<ProductEntity> productEntityList) {
 
         insertProducts(productEntityList);
-
-        return getInsertedDataSize();
     }
 
     private void insertProducts(List<ProductEntity> productEntityList) {
@@ -58,6 +58,36 @@ public class ProductJdbcRepository {
                     }
                 }
         );
+    }
+
+    public void updateProductInfo(List<ProductEntity> productEntityList) {
+        String sql = "UPDATE products " +
+                "SET item_name = ?" +
+                ", item_image_url = ?" +
+                ", item_description_url = ?" +
+                ", original_price = ?" +
+                ", sale_price = ?" +
+                ", last_modified_at = ?" +
+                " WHERE " +
+                "item_id = ?";
+
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ProductEntity product = productEntityList.get(i);
+                ps.setString(1, product.getItemName());
+                ps.setString(2, product.getItemImageUrl());
+                ps.setString(3, product.getItemDescriptionUrl());
+                ps.setBigDecimal(4, product.getOriginalPrice());
+                ps.setBigDecimal(5, product.getSalePrice());
+                ps.setTimestamp(6, Timestamp.valueOf(product.getLastModifiedAt()));
+                ps.setLong(7, product.getItemId());
+            }
+            @Override
+            public int getBatchSize() {
+                return productEntityList.size();
+            }
+        });
     }
 
     private int getInsertedDataSize() {
