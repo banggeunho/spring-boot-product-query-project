@@ -10,4 +10,8 @@ public interface ProductRelationService {
     void saveAll(List<ProductRelationshipCsvBean> productRelationshipCsvBeans, ProductQueryVOList productVOS);
 
     ProductRelationCommandVO save(ProductRelationCommandVO vo);
+
+    ProductRelationCommandVO update(ProductRelationCommandVO vo);
+
+    void delete(Long targetItemId, Long resultItemId);
 }

@@ -14,6 +14,12 @@ import java.util.Optional;
 @Repository
 public interface ProductRelationJpaRepository extends JpaRepository<ProductRelationshipEntity, Long> {
 
+    @Modifying
+    @Query("update ProductRelationshipEntity p " +
+            "set p.isDeleted = :isDeleted " +
+            "where p.targetProduct.itemId = :targetItemId and p.resultItemId = :resultItemId")
+    void updateIsDeleted(@Param("targetItemId") Long targetId, @Param("resultItemId") Long resultId, @Param("isDeleted") boolean isDeleted);
+
     Optional<ProductRelationshipEntity> findByTargetProductAndResultItemIdAndIsDeleted(ProductEntity targetProduct,
                                                                                         Long resultItemId,
                                                                                         boolean isDeleted);

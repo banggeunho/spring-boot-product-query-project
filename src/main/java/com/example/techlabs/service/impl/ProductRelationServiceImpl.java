@@ -10,6 +10,7 @@ import com.example.techlabs.service.ProductRelationService;
 import com.example.techlabs.service.vo.command.ProductRelationCommandVO;
 import com.example.techlabs.service.vo.query.ProductQueryVOList;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -66,6 +68,35 @@ public class ProductRelationServiceImpl implements ProductRelationService {
                 .build();
 
         targetProduct.getRelatedProducts().add(productRelationshipEntity);
+        productRelationshipEntity.setRank(updateRanking(targetProduct, vo.getResultItemId()));
+        productRelationJpaRepository.save(productRelationshipEntity);
+
+        return ProductRelationCommandVO.builder()
+                .targetItemId(vo.getTargetItemId())
+                .resultItemId(vo.getResultItemId())
+                .score(vo.getScore())
+                .rank(productRelationshipEntity.getRank())
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProductRelationCommandVO update(ProductRelationCommandVO vo) {
+        ProductEntity targetProduct = productJpaRepository.findByItemIdAndIsDeletedWithJoin(vo.getTargetItemId(), false)
+                .orElseThrow(() -> new RuntimeException("해당 타겟 상품이 없습니다요."));
+
+        ProductEntity resultProduct = productJpaRepository.findByItemIdAndIsDeleted(vo.getResultItemId(), false)
+                .orElseThrow(() -> new RuntimeException("해당 연관 상품이 없습니다요."));
+
+        ProductRelationshipEntity productRelationship =
+                productRelationJpaRepository.findByTargetProductAndResultItemIdAndIsDeleted(targetProduct, resultProduct.getItemId(), false)
+                        .orElseThrow(() -> new RuntimeException("해당 연관관계가 없습니다요."));
+
+        productRelationship.setScore(vo.getScore());
+
+//        targetProduct.getRelatedProducts().removeIf(x -> Objects.equals(x.getResultItemId(), vo.getResultItemId()));
+//        targetProduct.getRelatedProducts().add(productRelationship);
+//        log.debug(targetProduct.getRelatedProducts().toString());
 
         return ProductRelationCommandVO.builder()
                 .targetItemId(vo.getTargetItemId())
@@ -75,6 +106,26 @@ public class ProductRelationServiceImpl implements ProductRelationService {
                 .build();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public void delete(Long targetId, Long resultId)
+    {
+        ProductEntity targetProduct = productJpaRepository.findByItemIdAndIsDeletedWithJoin(targetId, false)
+                .orElseThrow(() -> new RuntimeException("해당 타겟 상품이 없습니다요."));
+
+        ProductEntity resultProduct = productJpaRepository.findByItemIdAndIsDeleted(resultId, false)
+                .orElseThrow(() -> new RuntimeException("해당 연관 상품이 없습니다요."));
+
+        ProductRelationshipEntity productRelationship =
+                productRelationJpaRepository.findByTargetProductAndResultItemIdAndIsDeleted(targetProduct, resultProduct.getItemId(), false)
+                        .orElseThrow(() -> new RuntimeException("해당 연관관계가 없습니다요."));
+
+        productRelationship.onDelete();
+        productRelationJpaRepository.updateIsDeleted(targetId, resultId, true);
+        targetProduct.getRelatedProducts().removeIf(x -> Objects.equals(x.getResultItemId(), resultId));
+
+        updateRanking(targetProduct, resultId);
+    }
     private long updateRanking(ProductEntity targetProduct, Long resultProductItemId) {
         List<ProductRelationshipEntity> relationshipEntitieList = targetProduct.getRelatedProducts().stream()
                 .sorted(Comparator.comparing(ProductRelationshipEntity::getScore).reversed())

@@ -20,24 +20,18 @@ public class ProductRelationshipCommandController {
         return ProductRelationCommandResponseDTO.of(productRelationService.save(ProductRelationCommandVO.of(dto)));
     }
 
-//    @DeleteMapping("")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void delete(@RequestParam(value = "id", required = true) List<Long> itemIdList) {
-//        productService.delete(itemIdList);
-//    }
-//
-//    @PutMapping("")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void update(@RequestBody List<ProductCommandRequestDTO> dtoList) {
-//        productService.update(
-//                ProductCommandVOList.builder()
-//                        .productCommandVOList(
-//                                dtoList.stream()
-//                                        .map(ProductCommandVO::of)
-//                                        .collect(Collectors.toList()))
-//                        .build()
-//        );
-//
-//    }
+    @DeleteMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@RequestParam(value = "target_id", required = true) Long targetItemId,
+                       @RequestParam(value = "result_id", required = true) Long resultItemId) {
+        productRelationService.delete(targetItemId, resultItemId);
+    }
+
+    @PutMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@RequestBody ProductRelationCommandRequestDTO dto) {
+        productRelationService.update(ProductRelationCommandVO.of(dto));
+
+    }
 }
 
