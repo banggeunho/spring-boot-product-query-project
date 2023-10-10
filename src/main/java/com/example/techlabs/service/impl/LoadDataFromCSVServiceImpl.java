@@ -7,6 +7,8 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,11 +19,13 @@ import java.util.List;
 @Service
 public class LoadDataFromCSVServiceImpl implements LoadDataFromCSVService {
     @Override
-    public <T extends CsvBean> List<T> loadData(Path path, Class<T> clazz) {
+    public <T extends CsvBean> List<T> loadData(String resourcePath, Class<T> clazz) {
 
         List<T> results = new ArrayList<>();
 
-        try (Reader reader = Files.newBufferedReader(path)) {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resourcePath);
+             Reader reader = new InputStreamReader(inputStream)) {
+
             CsvToBean<T> csvBean = new CsvToBeanBuilder<T>(reader)
                     .withType(clazz)
                     .build();

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Service
 public interface LoadDataFromCSVService {
-    <T extends CsvBean> List<T> loadData(Path path, Class<T> clazz);
+    <T extends CsvBean> List<T> loadData(String resource, Class<T> clazz);
 }

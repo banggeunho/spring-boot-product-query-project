@@ -41,11 +41,11 @@ public class TechlabsApplication {
     @PostConstruct
     public void loadDataFromCsv() throws IOException {
         List<ProductCsvBean> productCsvBeans = loadDataFromCSVService.loadData(
-                getResourcePath(PRODUCT_CSV_NAME),
+                CSV_ROOT_DIR + PRODUCT_CSV_NAME,
                 ProductCsvBean.class);
 
         List<ProductRelationshipCsvBean> productRelationshipCsvBeans = loadDataFromCSVService.loadData(
-                getResourcePath(REC_CSV_NAME),
+                CSV_ROOT_DIR + REC_CSV_NAME,
                 ProductRelationshipCsvBean.class);
 
 //        log.debug(productCsvBeans.toString());
@@ -58,6 +58,7 @@ public class TechlabsApplication {
 
     private Path getResourcePath(String resourceName) throws IOException {
         Resource resource = new ClassPathResource(CSV_ROOT_DIR + resourceName);
+        log.debug(resource.getURI().toString());
         if (resource.exists()) {
             try (InputStream inputStream = resource.getInputStream()) {
                 return Paths.get(resource.getURI());
