@@ -31,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductJpaRepository productJpaRepository;
     private final ProductRelationJpaRepository productRelationJpaRepository;
 
+    @Transactional
     @Override
     public int saveAll(List<ProductCsvBean> productCsvBeans) {
         return productJdbcRepository.saveAll(
@@ -49,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
                         .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProductQueryVOList findAll() {
         return ProductQueryVOList.builder()
@@ -88,6 +90,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
+    @Transactional
     @Override
     public ProductQueryVO save(ProductCommandVO productCommandVO) {
         productJpaRepository.findByItemId(productCommandVO.getItemId())
@@ -95,16 +98,20 @@ public class ProductServiceImpl implements ProductService {
         return ProductQueryVO.of(productJpaRepository.save(ProductCommandVO.toEntity(productCommandVO)));
     }
 
+    @Transactional
     @Override
     public void delete(List<Long> itemIdList) {
 
-        List<ProductEntity> entities = productJpaRepository.findByItemIdInAndIsDeleted(itemIdList, false);
-        List<Long> idList = entities.stream().map(ProductEntity::getItemId).collect(Collectors.toList());
+        productJpaRepository.bulkUpdateIsDeleted(itemIdList);
+        productRelationJpaRepository.bulkUpdateIsDeleted(itemIdList);
 
-        entities.forEach(ProductEntity::delete);
-        productRelationJpaRepository.findByResultItemIdInAndIsDeleted(idList, false).forEach(x -> x.setIsDeleted(true));
+//        List<ProductEntity> entities = productJpaRepository.findByItemIdInAndIsDeletedJoinRelationship(itemIdList, false);
+//
+//        entities.forEach(ProductEntity::delete);
+//        productRelationJpaRepository.findByResultItemIdInAndIsDeleted(itemIdList, false).forEach(x -> x.setIsDeleted(true));
     }
 
+    @Transactional
     @Override
     public void update(ProductCommandVOList voList) {
 //        // 개별 쿼리 버전

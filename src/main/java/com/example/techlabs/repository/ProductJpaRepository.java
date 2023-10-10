@@ -2,6 +2,7 @@ package com.example.techlabs.repository;
 
 import com.example.techlabs.repository.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,13 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
             "JOIN FETCH e.relatedProducts " +
             "WHERE e.itemId = :itemId AND e.isDeleted = :isDeleted")
     Optional<ProductEntity> findByItemIdAndIsDeletedWithJoin(@Param("itemId") Long itemId, @Param("isDeleted") boolean isDeleted);
+
+    @Modifying
+    @Query("UPDATE ProductEntity p SET " +
+            "p.isDeleted = true " +
+            "WHERE p.itemId IN :itemIdList " +
+            "AND p.isDeleted = false")
+    void bulkUpdateIsDeleted(@Param("itemIdList") List<Long> itemIdList);
 
 //    @Query("SELECT DISTINCT rp.resultProduct FROM ProductRelationshipEntity rp WHERE rp.targetProduct IN :products")
 //    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
