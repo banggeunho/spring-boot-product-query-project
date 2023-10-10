@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface ProductRelationJpaRepository extends JpaRepository<ProductRelationshipEntity, Long> {
 
-    Optional<ProductRelationshipEntity> findByTargetProductAndResultProductAndIsDeleted(ProductEntity targetProduct,
-                                                                                        ProductEntity resultProduct,
+    Optional<ProductRelationshipEntity> findByTargetProductAndResultItemIdAndIsDeleted(ProductEntity targetProduct,
+                                                                                        Long resultItemId,
                                                                                         boolean isDeleted);
 
     List<ProductRelationshipEntity> findByTargetProductAndIsDeleted(ProductEntity targetProduct, boolean isDeleted);

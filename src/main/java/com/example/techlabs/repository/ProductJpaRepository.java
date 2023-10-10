@@ -11,10 +11,16 @@ import java.util.Optional;
 
 @Repository
 public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long> {
+//    @Query("SELECT DISTINCT e " +
+//            "FROM ProductEntity e " +
+//            "JOIN FETCH e.relatedProducts " +
+//            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDeleted")
     @Query("SELECT DISTINCT e " +
             "FROM ProductEntity e " +
-            "JOIN FETCH e.relatedProducts " +
-            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDeleted")
+            "JOIN FETCH e.relatedProducts r " +
+            "WHERE e.itemId IN :itemIds " +
+            "AND e.isDeleted = :isDeleted " +
+            "AND r.isDeleted = false")
 //    @EntityGraph(value = "product-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     List<ProductEntity> findByItemIdInAndIsDeletedJoinRelationship(@Param("itemIds") List<Long> itemIds, @Param("isDeleted") boolean isDeleted);
 
@@ -29,8 +35,8 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
             "WHERE e.itemId = :itemId AND e.isDeleted = :isDeleted")
     Optional<ProductEntity> findByItemIdAndIsDeletedWithJoin(@Param("itemId") Long itemId, @Param("isDeleted") boolean isDeleted);
 
-    @Query("SELECT DISTINCT rp.resultProduct FROM ProductRelationshipEntity rp WHERE rp.targetProduct IN :products")
-    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
+//    @Query("SELECT DISTINCT rp.resultProduct FROM ProductRelationshipEntity rp WHERE rp.targetProduct IN :products")
+//    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);
 
 //    @Query("SELECT DISTINCT pe.resultProduct FROM ProductEntity pe WHERE pe IN :products")
 //    List<ProductEntity> findResultProductsForRelatedProducts(@Param("products") List<ProductEntity> products);

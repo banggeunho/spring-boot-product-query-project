@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -21,11 +20,9 @@ public class ProductRelationshipJdbcRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public int saveAll(List<ProductRelationshipEntity> productRelationshipEntityList) {
-
+    public void saveAll(List<ProductRelationshipEntity> productRelationshipEntityList) {
         insertProductRelationships(productRelationshipEntityList);
-
-        return getInsertedDataSize();
+//        return getInsertedDataSize();
     }
 
     private void insertProductRelationships(List<ProductRelationshipEntity> productRelationshipEntityList) {
@@ -42,7 +39,7 @@ public class ProductRelationshipJdbcRepository {
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                         ProductRelationshipEntity productRelationship = productRelationshipEntityList.get(i);
                         ps.setLong(1, productRelationship.getTargetProduct().getItemId());
-                        ps.setLong(2, productRelationship.getResultProduct().getItemId());
+                        ps.setLong(2, productRelationship.getResultItemId());
                         ps.setBigDecimal(3, productRelationship.getScore());
                         ps.setLong(4, productRelationship.getRank());
                         ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
@@ -59,10 +56,10 @@ public class ProductRelationshipJdbcRepository {
         );
     }
 
-    private int getInsertedDataSize() {
-        String sql = "SELECT * FROM PRODUCT_RELATIONSHIPS";
-        List<Long> idList = new ArrayList<>();
-        jdbcTemplate.query(sql, (rs, rowNum) -> idList.add(rs.getLong("ID")));
-        return idList.size();
-    }
+//    private int getInsertedDataSize() {
+//        String sql = "SELECT * FROM PRODUCT_RELATIONSHIPS";
+//        List<Long> idList = new ArrayList<>();
+//        jdbcTemplate.query(sql, (rs, rowNum) -> idList.add(rs.getLong("ID")));
+//        return idList.size();
+//    }
 }

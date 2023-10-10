@@ -4,7 +4,6 @@ import com.example.techlabs.service.vo.command.ProductCommandVO;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 
@@ -59,16 +58,16 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
     @ToString.Exclude
     @Builder.Default
     @NotAudited
-    @OneToMany(mappedBy = "targetProduct", orphanRemoval = true, cascade = CascadeType.ALL)
-    @Where(clause = "is_deleted = false")
+    @OneToMany(mappedBy = "targetProduct", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Where(clause = "is_deleted = false")
     private List<ProductRelationshipEntity> relatedProducts = new ArrayList<>();
 
-    @ToString.Exclude
-    @Builder.Default
-    @NotAudited
-    @OneToMany(mappedBy = "resultProduct", orphanRemoval = true, cascade = CascadeType.ALL)
-    @Where(clause = "is_deleted = false")
-    private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
+//    @ToString.Exclude
+//    @Builder.Default
+//    @NotAudited
+//    @OneToMany(mappedBy = "resultProduct", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+//    @Where(clause = "is_deleted = false")
+//    private List<ProductRelationshipEntity> resultProducts = new ArrayList<>();
 
     public void update(ProductCommandVO productCommandVO) {
         this.setItemId(productCommandVO.getItemId());
@@ -83,7 +82,7 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
 
     public void delete() {
         this.getRelatedProducts().forEach(x -> x.setIsDeleted(true));
-        this.getResultProducts().forEach(x -> x.setIsDeleted(true));
+//        this.getResultProducts().forEach(x -> x.setIsDeleted(true)); //todo 추가
         super.onDelete();
     }
 
@@ -91,7 +90,7 @@ public class ProductEntity extends BaseUpdateEntity implements Serializable {
         List<ResultProductInfo> resultProductIds = new ArrayList<>();
         this.relatedProducts.forEach(x -> resultProductIds.add(
                 ResultProductInfo.builder()
-                        .itemId(x.getResultProduct().getItemId())
+                        .itemId(x.getResultItemId())
                         .rank(x.getRank())
                         .score(x.getScore())
                         .build()));

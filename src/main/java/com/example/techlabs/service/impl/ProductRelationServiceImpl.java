@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -29,13 +28,13 @@ public class ProductRelationServiceImpl implements ProductRelationService {
     private final ProductJpaRepository productJpaRepository;
 
     @Override
-    public int saveAll(List<ProductRelationshipCsvBean> productRelationshipCsvBeans, ProductQueryVOList productQueryVOList) {
-        return productRelationshipJdbcRepository.saveAll(
+    public void saveAll(List<ProductRelationshipCsvBean> productRelationshipCsvBeans, ProductQueryVOList productQueryVOList) {
+        productRelationshipJdbcRepository.saveAll(
                 productRelationshipCsvBeans.stream()
                         .filter(x -> productQueryVOList.isExistByItemId(x.getTargetItemId()))
                         .map(x -> ProductRelationshipEntity.builder()
                                 .targetProduct(productQueryVOList.getByTargetItemId(x.getTargetItemId()).toEntity())
-                                .resultProduct(productQueryVOList.getByResultItemId(x.getResultItemId()).toEntity())
+                                .resultItemId(x.getResultItemId())
                                 .score(x.getScore())
                                 .rank(x.getRank())
                                 .isDeleted(false)
@@ -55,13 +54,13 @@ public class ProductRelationServiceImpl implements ProductRelationService {
         ProductEntity resultProduct = productJpaRepository.findByItemIdAndIsDeleted(vo.getResultItemId(), false)
                 .orElseThrow(() -> new RuntimeException("해당 연관 상품이 없습니다요."));
 
-        productRelationJpaRepository.findByTargetProductAndResultProductAndIsDeleted(targetProduct, resultProduct, false)
+        productRelationJpaRepository.findByTargetProductAndResultItemIdAndIsDeleted(targetProduct, resultProduct.getItemId(), false)
                 .ifPresent(x -> { throw new RuntimeException("해당 관계가 이미 존재합니다.");});
 
         ProductRelationshipEntity productRelationshipEntity = ProductRelationshipEntity.builder()
                 .score(vo.getScore())
                 .targetProduct(targetProduct)
-                .resultProduct(resultProduct)
+                .resultItemId(resultProduct.getItemId())
                 .isDeleted(false)
                 .build();
 
@@ -83,7 +82,7 @@ public class ProductRelationServiceImpl implements ProductRelationService {
         long rank = 1L;
         long newRank = -1L;
         for (ProductRelationshipEntity relationshipEntity : relationshipEntitieList) {
-            if (Objects.equals(relationshipEntity.getResultProduct().getItemId(), resultProductItemId)) {
+            if (Objects.equals(relationshipEntity.getResultItemId(), resultProductItemId)) {
                 newRank = rank;
             }
             relationshipEntity.setRank(rank);
