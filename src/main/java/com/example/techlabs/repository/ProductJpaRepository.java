@@ -18,7 +18,7 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 //            "WHERE e.itemId IN :itemIds AND e.isDeleted = :isDeleted")
     @Query("SELECT DISTINCT e " +
             "FROM ProductEntity e " +
-            "JOIN FETCH e.relatedProducts r " +
+            "LEFT JOIN FETCH e.relatedProducts r " +
             "WHERE e.itemId IN :itemIds " +
             "AND e.isDeleted = :isDeleted " +
             "AND r.isDeleted = false")
@@ -32,7 +32,7 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
 
     @Query("SELECT DISTINCT e " +
             "FROM ProductEntity e " +
-            "JOIN FETCH e.relatedProducts " +
+            "LEFT JOIN FETCH e.relatedProducts " +
             "WHERE e.itemId = :itemId AND e.isDeleted = :isDeleted")
     Optional<ProductEntity> findByItemIdAndIsDeletedWithJoin(@Param("itemId") Long itemId, @Param("isDeleted") boolean isDeleted);
 
