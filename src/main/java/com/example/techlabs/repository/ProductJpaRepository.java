@@ -19,10 +19,10 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, Long>
     @Query("SELECT DISTINCT e " +
             "FROM ProductEntity e " +
             "LEFT JOIN FETCH e.relatedProducts r " +
-            "WHERE e.itemId IN :itemIds " +
+            "WHERE 1 = 1 " +
+            "AND e.itemId IN :itemIds " +
             "AND e.isDeleted = :isDeleted " +
             "AND r.isDeleted = false")
-//    @EntityGraph(value = "product-entity-graph", type = EntityGraph.EntityGraphType.FETCH)
     List<ProductEntity> findByItemIdInAndIsDeletedJoinRelationship(@Param("itemIds") List<Long> itemIds, @Param("isDeleted") boolean isDeleted);
 
     @Query("SELECT e " +
