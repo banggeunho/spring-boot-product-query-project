@@ -12,5 +12,5 @@ public interface ProductService {
     ProductQueryVOList findByInIdList(List<Long> targetIdList);
     ProductQueryVOList save(ProductCommandVOList productCommandVO);
     void delete(List<Long> itemIdList);
-    void update(ProductCommandVOList productCommandVO);
+    ProductQueryVOList update(ProductCommandVOList productCommandVO);
 }

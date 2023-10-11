@@ -43,15 +43,17 @@ public class ProductCommandController {
 
     @PutMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public ProductQueryVOList update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
+    public List<ProductCommandResponseDTO> update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
         return productService.update(
                 ProductCommandVOList.builder()
                         .productCommandVOList(
                                 dtoList.stream()
                                         .map(ProductCommandVO::of)
                                         .collect(Collectors.toList()))
-                        .build()
-        );
+                        .build())
+                .getProductQueryVOList().stream()
+                .map(ProductCommandResponseDTO::of)
+                .collect(Collectors.toList());
     }
 }
 
