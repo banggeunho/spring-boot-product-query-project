@@ -18,11 +18,7 @@ public class ProductQueryController {
 
     private final ProductService productService;
     @GetMapping("")
-    public ResponseEntity<ProductQueryResponseDTOList> findByItemId(@RequestParam(value = "id", required = false) List<Long> targetIdList) {
-        if (targetIdList == null) {
-            return ResponseEntity.ok(ProductQueryResponseDTOList.from(productService.findAll()));
-        } else {
+    public ResponseEntity<ProductQueryResponseDTOList> findByItemId(@RequestParam(value = "id") List<Long> targetIdList) {
             return ResponseEntity.ok(ProductQueryResponseDTOList.from(productService.findByInIdList(targetIdList)));
-        }
     }
 }
