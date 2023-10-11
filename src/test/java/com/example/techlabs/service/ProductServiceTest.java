@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class ProductServiceTest {
+class ProductServiceㄲTest {
 
     @Autowired
     private ProductService productService;
@@ -35,10 +35,6 @@ class ProductServiceTest {
     @AfterAll
     public static void close() {
         commonUtil.close();
-    }
-
-    @Test
-    void saveAll() {
     }
 
     @Test
@@ -84,6 +80,9 @@ class ProductServiceTest {
                 ))
                 .build();
 
+        when(CommonUtil.extractKey(any(), any()))
+                .thenReturn(List.of(123L, 323L));
+
         ProductQueryVOList resultList = productService.save(voList);
 
         Assertions.assertThat(resultList.getProductQueryVOList().size()).isEqualTo(2);
@@ -114,6 +113,9 @@ class ProductServiceTest {
                                 .build()
                 ))
                 .build();
+
+        when(CommonUtil.extractKey(any(), any()))
+                .thenReturn(List.of(300002285L, 323L));
 
         Assertions.assertThatThrownBy(() -> productService.save(voList))
                 .isInstanceOf(RuntimeException.class)
