@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product-relationships")
@@ -16,21 +18,21 @@ public class ProductRelationshipCommandController {
     private final ProductRelationService productRelationService;
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductRelationCommandResponseDTO save(@RequestBody ProductRelationCommandRequestDTO dto) {
+    public ProductRelationCommandResponseDTO save(@Valid @RequestBody ProductRelationCommandRequestDTO dto) {
         return ProductRelationCommandResponseDTO.of(productRelationService.save(ProductRelationCommandVO.of(dto)));
     }
 
     @DeleteMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@RequestParam(value = "target_id", required = true) Long targetItemId,
-                       @RequestParam(value = "result_id", required = true) Long resultItemId) {
+    public void delete(@RequestParam(value = "target_id") Long targetItemId,
+                       @RequestParam(value = "result_id") Long resultItemId) {
         productRelationService.delete(targetItemId, resultItemId);
     }
 
     @PutMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody ProductRelationCommandRequestDTO dto) {
-        productRelationService.update(ProductRelationCommandVO.of(dto));
+    public ProductRelationCommandResponseDTO update(@Valid @RequestBody ProductRelationCommandRequestDTO dto) {
+        return ProductRelationCommandResponseDTO.of(productRelationService.update(ProductRelationCommandVO.of(dto)));
 
     }
 }
