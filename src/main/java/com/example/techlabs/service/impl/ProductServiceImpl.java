@@ -131,19 +131,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductQueryVOList update(ProductCommandVOList voList) {
         // 한방 쿼리 버전
-        List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeleted(
-                voList.getProductCommandVOList().stream()
-                        .map(ProductCommandVO::getItemId)
-                        .collect(Collectors.toList()),
-                false);
-
         List<Long> idList = CommonUtil.extractKey(voList.getProductCommandVOList(), ProductCommandVO::getId);
+        List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeleted(idList,false);
         Map<Long, ProductEntity> productEntityMap = CommonUtil.groupByKey(productEntityList, ProductEntity::getItemId);
 
         checkProductExistence(idList, productEntityMap);
 
         voList.getProductCommandVOList().forEach(vo -> productEntityMap.get(vo.getItemId()).update(vo));
-
         productJdbcRepository.updateProductInfo(productEntityList);
 
         return ProductQueryVOList.of(productEntityList);
