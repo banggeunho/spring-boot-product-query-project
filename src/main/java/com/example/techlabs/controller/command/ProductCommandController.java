@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,9 @@ import java.util.stream.Collectors;
 public class ProductCommandController {
 
     private final ProductService productService;
-    @PostMapping("") //todo 검증 추가..
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<ProductCommandResponseDTO> save(@RequestBody List<ProductCommandRequestDTO> dtoList) {
+    public List<ProductCommandResponseDTO> save(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
         return productService.save(
                         ProductCommandVOList.builder()
                                 .productCommandVOList(
@@ -41,7 +42,7 @@ public class ProductCommandController {
 
     @PutMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@RequestBody List<ProductCommandRequestDTO> dtoList) {
+    public void update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
         productService.update(
                 ProductCommandVOList.builder()
                         .productCommandVOList(
