@@ -1,19 +1,15 @@
 package com.example.techlabs.controller.command;
 
 import com.example.techlabs.controller.command.dto.ProductCommandRequestDTO;
-import com.example.techlabs.controller.command.dto.ProductCommandResponseDTO;
 import com.example.techlabs.controller.command.dto.ProductCommandResponseDTOList;
 import com.example.techlabs.service.ProductService;
-import com.example.techlabs.service.vo.command.ProductCommandVO;
 import com.example.techlabs.service.vo.command.ProductCommandVOList;
-import com.example.techlabs.service.vo.query.ProductQueryVOList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

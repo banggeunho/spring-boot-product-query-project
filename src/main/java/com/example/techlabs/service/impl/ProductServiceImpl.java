@@ -25,6 +25,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.example.techlabs.base.common.ErrorCodeEnum.ALREADY_EXISTS_PRODUCT;
+import static com.example.techlabs.base.common.ErrorCodeEnum.NOT_EXISTS_PRODUCT;
+
 @Slf4j
 @Service
 @Transactional
@@ -95,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         productEntityList.stream()
                 .filter(productEntity -> productEntityMap.containsKey(productEntity.getItemId()))
                 .findFirst()
-                .ifPresent(productEntity -> { throw new EntityExistsException(String.format("해당 상품이 이미 존재합니다.", productEntity.getItemId()));});
+                .ifPresent(productEntity -> { throw new EntityExistsException(ALREADY_EXISTS_PRODUCT.getMessage());});
 
         productJdbcRepository.saveAll(productCommandVOList.getProductCommandVOList().stream()
                 .map(ProductCommandVO::toEntity)
@@ -134,7 +137,7 @@ public class ProductServiceImpl implements ProductService {
         targetIdList.stream()
                 .filter(id -> !productEntityMap.containsKey(id))
                 .findFirst()
-                .ifPresent(id -> {throw new EntityNotFoundException(String.format("해당 품목이 존재하지 않습니다. {}", id));});
+                .ifPresent(id -> {throw new EntityNotFoundException(NOT_EXISTS_PRODUCT.getMessage());});
     }
 
     private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductEntity.ResultProductInfo> resultProductInfoList) {
