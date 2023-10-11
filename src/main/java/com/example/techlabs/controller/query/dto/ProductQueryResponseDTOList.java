@@ -1,11 +1,15 @@
 package com.example.techlabs.controller.query.dto;
 
+import com.example.techlabs.service.vo.query.ProductQueryVO;
 import com.example.techlabs.service.vo.query.ProductQueryVOList;
+import com.example.techlabs.service.vo.query.RelatedProductInfoVOList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +33,8 @@ public class ProductQueryResponseDTOList {
                                         .itemDescriptionUrl(vo.getItemDescriptionUrl())
                                         .originalPrice(vo.getOriginalPrice())
                                         .salePrice(vo.getSalePrice())
-                                        .relatedItemSize(vo.getRelatedProductInfoVOList().getVoList().size())
-                                        .relatedProductQueryResponseDTOList(vo.getRelatedProductInfoVOList().getVoList().stream()
+                                        .relatedItemSize(getSafetyRelatedProductInfoVOList(vo).getVoList().size())
+                                        .relatedProductQueryResponseDTOList(getSafetyRelatedProductInfoVOList(vo).getVoList().stream()
                                                 .map(relatedProductInfoVO -> RelatedProductQueryResponseDTO.builder()
                                                         .itemId(relatedProductInfoVO.getItemId())
                                                         .itemName(relatedProductInfoVO.getItemName())
@@ -46,5 +50,15 @@ public class ProductQueryResponseDTOList {
                                 .collect(Collectors.toList()))
                 .targetSize(voList.getProductQueryVOList().size())
                 .build();
+    }
+
+    private static RelatedProductInfoVOList getSafetyRelatedProductInfoVOList(ProductQueryVO vo) {
+        if (vo.getRelatedProductInfoVOList() != null && !CollectionUtils.isEmpty(vo.getRelatedProductInfoVOList().getVoList())) {
+            return vo.getRelatedProductInfoVOList();
+        } else {
+            return RelatedProductInfoVOList.builder()
+                    .voList(Collections.emptyList())
+                    .build();
+        }
     }
 }
