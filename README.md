@@ -46,9 +46,10 @@ h2-database: http://localhost:8080/h2-console
 
 - Open CSV를 이용하여 어플리케이션 실행 시 CSV에서 데이터를 추출하고 DB에 저장
     - 성능 개선을 위해 벌크 삽입 처리
-    - JPA의 ID 생성 정책에 따른 제한으로 Spring JDBC Template을 이용하여 벌크 삽입 처리
+    - JPA의 ID 생성 정책(IDENTITY)에 따른 벌크 처리 제한으로 Spring JDBC Template을 이용하여 벌크 삽입 처리
 - Spring-data-envers를 이용하여 상품 정보 이력 관리
-- 빠른 조회를 위해 상품 테이블과 상품 연관 정보 테이블에 item_id에 대해 인덱스 생성
+- 조회가 자주 발생하는 상품 테이블과 상품 연관 정보 테이블에 item_id에 대해 인덱스 생성
+- 상품과 상품 연관 정보 서비스 클래스에 대한 단위 테스트 코드 작성
 - 상품 조회 API 구현
     - 기존 JPA를 사용하여 Product의 item_id와 Rec의 target_item_id, result_item_id를 Mapping 하여 조회하였으나, N+1문제와 Lazy Loading 설정이 적용되지 않는 문제가 발생해 쿼리 I/O 최적화를 위해 일부 Mapping 제거 후 구현
     - [프로세스]
@@ -156,4 +157,3 @@ h2-database: http://localhost:8080/h2-console
         7. 삭제된 연관정보를 제외하고 랭킹을 갱신합니다.
         8. 변경된 entity들을 list로 만들어 bulk update 합니다.
         ```
-        
