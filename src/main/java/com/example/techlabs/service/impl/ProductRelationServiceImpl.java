@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.example.techlabs.base.common.ErrorCodeEnum.*;
+import static com.example.techlabs.base.common.ErrorMessageEnum.*;
 
 @Slf4j
 @Service

@@ -25,8 +25,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.example.techlabs.base.common.ErrorCodeEnum.ALREADY_EXISTS_PRODUCT;
-import static com.example.techlabs.base.common.ErrorCodeEnum.NOT_EXISTS_PRODUCT;
+import static com.example.techlabs.base.common.ErrorMessageEnum.*;
 
 @Slf4j
 @Service

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public enum ErrorCodeEnum {
+public enum ErrorMessageEnum {
 
     ALREADY_EXISTS_PRODUCT("이미 해당 아이디를 가진 상품이 존재합니다."),
     ALREADY_EXISTS_PRODUCT_RELATIONSHIP("이미 해당 상품들간의 연관관계가 존재합니다."),
