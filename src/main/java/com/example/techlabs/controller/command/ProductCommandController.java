@@ -2,6 +2,7 @@ package com.example.techlabs.controller.command;
 
 import com.example.techlabs.controller.command.dto.ProductCommandRequestDTO;
 import com.example.techlabs.controller.command.dto.ProductCommandResponseDTO;
+import com.example.techlabs.controller.command.dto.ProductCommandResponseDTOList;
 import com.example.techlabs.service.ProductService;
 import com.example.techlabs.service.vo.command.ProductCommandVO;
 import com.example.techlabs.service.vo.command.ProductCommandVOList;
@@ -22,17 +23,8 @@ public class ProductCommandController {
     private final ProductService productService;
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<ProductCommandResponseDTO> save(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
-        return productService.save(
-                        ProductCommandVOList.builder()
-                                .productCommandVOList(
-                                        dtoList.stream()
-                                                .map(ProductCommandVO::of)
-                                                .collect(Collectors.toList()))
-                                .build())
-                .getProductQueryVOList().stream()
-                .map(ProductCommandResponseDTO::of)
-                .collect(Collectors.toList());
+    public ProductCommandResponseDTOList save(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
+        return ProductCommandResponseDTOList.of(productService.save(ProductCommandVOList.of(dtoList)));
     }
 
     @DeleteMapping("")
@@ -43,17 +35,8 @@ public class ProductCommandController {
 
     @PutMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductCommandResponseDTO> update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
-        return productService.update(
-                ProductCommandVOList.builder()
-                        .productCommandVOList(
-                                dtoList.stream()
-                                        .map(ProductCommandVO::of)
-                                        .collect(Collectors.toList()))
-                        .build())
-                .getProductQueryVOList().stream()
-                .map(ProductCommandResponseDTO::of)
-                .collect(Collectors.toList());
+    public ProductCommandResponseDTOList update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
+        return ProductCommandResponseDTOList.of(productService.update(ProductCommandVOList.of(dtoList)));
     }
 }
 
