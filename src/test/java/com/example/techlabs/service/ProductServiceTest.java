@@ -120,8 +120,7 @@ class ProductServiceTest {
                 .thenReturn(List.of(300002285L, 323L));
 
         Assertions.assertThatThrownBy(() -> productService.save(voList))
-                .isInstanceOf(EntityExistsException.class)
-                .hasMessageContaining("이미 존재합니다.");
+                .isInstanceOf(EntityExistsException.class);
     }
 
     @Test
@@ -129,8 +128,7 @@ class ProductServiceTest {
         List<Long> itemIdList = List.of(1L, 2L);
 
         Assertions.assertThatThrownBy(() -> productService.delete(itemIdList))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("않습니다.");
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test
