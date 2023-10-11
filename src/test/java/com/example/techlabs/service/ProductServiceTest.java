@@ -12,6 +12,8 @@ import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -53,7 +55,7 @@ class ProductServiceTest {
     @Test
     void 요청된_ID_LIST_를_통해_상품을_조회_할때_잘못된_ID면_예외가_발생한다() {
         Assertions.assertThatThrownBy(() -> productService.findByInIdList(List.of(3243422285L)))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(EntityNotFoundException.class)
                 .hasMessageContaining("존재하지 않습니다.");
     }
 
@@ -118,7 +120,7 @@ class ProductServiceTest {
                 .thenReturn(List.of(300002285L, 323L));
 
         Assertions.assertThatThrownBy(() -> productService.save(voList))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(EntityExistsException.class)
                 .hasMessageContaining("이미 존재합니다.");
     }
 

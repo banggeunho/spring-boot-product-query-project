@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
@@ -93,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
         productEntityList.stream()
                 .filter(productEntity -> productEntityMap.containsKey(productEntity.getItemId()))
                 .findFirst()
-                .ifPresent(productEntity -> { throw new RuntimeException(String.format("해당 상품이 이미 존재합니다.", productEntity.getItemId()));});
+                .ifPresent(productEntity -> { throw new EntityExistsException(String.format("해당 상품이 이미 존재합니다.", productEntity.getItemId()));});
 
         productJdbcRepository.saveAll(productCommandVOList.getProductCommandVOList().stream()
                 .map(ProductCommandVO::toEntity)
@@ -132,7 +134,7 @@ public class ProductServiceImpl implements ProductService {
         targetIdList.stream()
                 .filter(id -> !productEntityMap.containsKey(id))
                 .findFirst()
-                .ifPresent(id -> {throw new RuntimeException(String.format("해당 품목이 존재하지 않습니다. {}", id));});
+                .ifPresent(id -> {throw new EntityNotFoundException(String.format("해당 품목이 존재하지 않습니다. {}", id));});
     }
 
     private RelatedProductInfoVOList mapRelatedItemInfo(List<ProductEntity.ResultProductInfo> resultProductInfoList) {
