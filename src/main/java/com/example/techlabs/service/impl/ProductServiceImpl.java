@@ -54,22 +54,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public ProductQueryVOList findAll() {
-        return ProductQueryVOList.builder()
-                .productQueryVOList(
-                        productJpaRepository.findAll().stream()
-                                .filter(x -> !x.getIsDeleted())
-                                .map(x -> ProductQueryVO.builder()
-                                        .id(x.getId())
-                                        .itemId(x.getItemId())
-                                        .itemName(x.getItemName())
-                                        .itemImageUrl(x.getItemImageUrl())
-                                        .itemDescriptionUrl(x.getItemDescriptionUrl())
-                                        .originalPrice(x.getOriginalPrice())
-                                        .salePrice(x.getSalePrice())
-                                        .build())
-                                .collect(Collectors.toList())
-                )
-                .build();
+        return ProductQueryVOList.of(productJpaRepository.findAll());
     }
 
     @Transactional(readOnly = true)

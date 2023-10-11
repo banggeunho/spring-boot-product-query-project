@@ -35,6 +35,7 @@ public class ProductQueryVOList {
     public static ProductQueryVOList of(List<ProductEntity> productEntityList) {
         return ProductQueryVOList.builder()
                 .productQueryVOList(productEntityList.stream()
+                        .filter(product -> !product.getIsDeleted())
                         .map(entity -> ProductQueryVO.builder()
                                 .itemId(entity.getItemId())
                                 .itemName(entity.getItemName())

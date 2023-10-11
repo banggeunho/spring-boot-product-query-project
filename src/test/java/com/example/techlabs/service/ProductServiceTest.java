@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class ProductServiceㄲTest {
+class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
@@ -165,9 +165,5 @@ class ProductServiceㄲTest {
         Assertions.assertThat(productQueryVOList.getProductQueryVOList().size()).isEqualTo(2);
         Assertions.assertThat(productQueryVOList.isExistByItemId(300002285L)).isTrue();
         Assertions.assertThat(productQueryVOList.getProductQueryVOList().get(0).getItemName()).isEqualTo("뚜비두밥");
-    }
-
-    @Test
-    void update() {
     }
 }
