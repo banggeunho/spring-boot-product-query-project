@@ -66,7 +66,7 @@ public class ProductRelationshipJdbcRepository {
                 ps.setLong(1, productRelationship.getRank());
                 ps.setBigDecimal(2, productRelationship.getScore());
                 ps.setBoolean(3, productRelationship.getIsDeleted());
-                ps.setTimestamp(4, Timestamp.valueOf(productRelationship.getLastModifiedAt()));
+                ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setLong(5, productRelationship.getTargetProduct().getItemId());
                 ps.setLong(6, productRelationship.getResultItemId());
             }

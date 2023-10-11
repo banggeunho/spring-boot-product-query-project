@@ -33,7 +33,6 @@ public class ProductRelationshipCommandController {
     @ResponseStatus(HttpStatus.OK)
     public ProductRelationCommandResponseDTO update(@Valid @RequestBody ProductRelationCommandRequestDTO dto) {
         return ProductRelationCommandResponseDTO.of(productRelationService.update(ProductRelationCommandVO.of(dto)));
-
     }
 }
 
