@@ -65,7 +65,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductQueryVOList findByInIdList(List<Long> targetIdList) {
 
-        List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeletedJoinRelationship(targetIdList, false);
+        List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeletedJoinRelationship(
+                targetIdList, false);
 
         checkProductExistence(targetIdList, CommonUtil.groupByKey(productEntityList, ProductEntity::getItemId));
 
@@ -120,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductQueryVOList update(ProductCommandVOList voList) {
         // 한방 쿼리 버전
-        List<Long> idList = CommonUtil.extractKey(voList.getProductCommandVOList(), ProductCommandVO::getId);
+        List<Long> idList = CommonUtil.extractKey(voList.getProductCommandVOList(), ProductCommandVO::getItemId);
         List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeleted(idList,false);
         Map<Long, ProductEntity> productEntityMap = CommonUtil.groupByKey(productEntityList, ProductEntity::getItemId);
 
