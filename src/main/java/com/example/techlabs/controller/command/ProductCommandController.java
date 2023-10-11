@@ -5,6 +5,7 @@ import com.example.techlabs.controller.command.dto.ProductCommandResponseDTO;
 import com.example.techlabs.service.ProductService;
 import com.example.techlabs.service.vo.command.ProductCommandVO;
 import com.example.techlabs.service.vo.command.ProductCommandVOList;
+import com.example.techlabs.service.vo.query.ProductQueryVOList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +43,8 @@ public class ProductCommandController {
 
     @PutMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
-        productService.update(
+    public ProductQueryVOList update(@Valid @RequestBody List<ProductCommandRequestDTO> dtoList) {
+        return productService.update(
                 ProductCommandVOList.builder()
                         .productCommandVOList(
                                 dtoList.stream()
@@ -51,7 +52,6 @@ public class ProductCommandController {
                                         .collect(Collectors.toList()))
                         .build()
         );
-
     }
 }
 

@@ -114,18 +114,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(ProductCommandVO::toEntity)
                 .collect(Collectors.toList()));
 
-        return ProductQueryVOList.builder()
-                .productQueryVOList(productCommandVOList.getProductCommandVOList().stream()
-                        .map(vo -> ProductQueryVO.builder()
-                                .itemId(vo.getItemId())
-                                .itemName(vo.getItemName())
-                                .itemImageUrl(vo.getItemImageUrl())
-                                .itemDescriptionUrl(vo.getItemDescriptionUrl())
-                                .originalPrice(vo.getOriginalPrice())
-                                .salePrice(vo.getSalePrice())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
+        return ProductQueryVOList.of(productCommandVOList);
     }
 
     @Override
@@ -140,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true) // jpa의 dirty checking을 disable 하기 위해 readonly 활성화
     @Override
-    public void update(ProductCommandVOList voList) {
+    public ProductQueryVOList update(ProductCommandVOList voList) {
         // 한방 쿼리 버전
         List<ProductEntity> productEntityList = productJpaRepository.findByItemIdInAndIsDeleted(
                 voList.getProductCommandVOList().stream()
@@ -156,6 +145,8 @@ public class ProductServiceImpl implements ProductService {
         voList.getProductCommandVOList().forEach(vo -> productEntityMap.get(vo.getItemId()).update(vo));
 
         productJdbcRepository.updateProductInfo(productEntityList);
+
+        return ProductQueryVOList.of(productEntityList);
     }
 
     private void checkProductExistence(List<Long> targetIdList, Map<Long, ProductEntity> productEntityMap) {
