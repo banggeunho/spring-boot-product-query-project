@@ -1,7 +1,7 @@
 ## Developer
 
 > name : 방근호
-contact : panggeunho@gmail.com / 010-3767-8836
+contact : panggeunho@gmail.com
 >
 
 ## Developing Environment
@@ -9,8 +9,7 @@ contact : panggeunho@gmail.com / 010-3767-8836
 - Java 11 / Gradle / Spring boot 2.7.3
 - Macbook Pro (2019), Mackbook M1
 - IntelliJ / Github
-- 두 개의 Laptop을 활용해서 Commit User가 두명입니다. (banggeunho, ddooby.doobob)
-
+  
 ## Used Libraries
 
 - spring-data-jpa : 데이터 ORM
